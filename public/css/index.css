@@ -42,7 +42,7 @@ body,html{
   background-size: cover;
   background-position: center;
 }
-.page_1{
+.page_1,.page_2{
   position: relative;
   background-color: white ;
   z-index: 2;

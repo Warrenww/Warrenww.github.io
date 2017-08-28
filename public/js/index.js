@@ -127,7 +127,7 @@ $(document).ready(function () {
       "<td colspan='6'>"+catdata[id].特性+"</td>"+
       "</tr>"
     );
-    $("html, body").animate({ scrollTop: $(document).height() },1000,'easeInOutCubic');
+    scroll_to_div('display_1') ;
   }
   function levelToValue(origin) {
     let lv = Number($(".level").val()) ;//get current value
