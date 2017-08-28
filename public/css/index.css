@@ -1,0 +1,122 @@
+body,html{
+  margin: 0;
+  height: 100%;
+  font-family: Microsoft JhengHei;
+}
+.start_holder{
+  position: fixed;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  top: 56%;
+  z-index: 1 ;
+}
+#start{
+  cursor: pointer;
+  font-family: Microsoft JhengHei;
+  font-size: 3em;
+  padding: 2px 120px ;
+  background-color: rgb(227, 158, 73) ;
+  background: linear-gradient(rgb(245, 216, 76), rgb(199, 133, 39));
+  color: white ;
+  font-weight: 900;
+  border: 5px solid black;
+  border-radius: 20px;
+  text-shadow:
+    -3px -3px 0 #000,
+    -1px -3px 0 #000,
+    -3px -1px 0 #000,
+     3px -3px 0 #000,
+     3px -1px 0 #000,
+    -3px  3px 0 #000,
+    -3px  1px 0 #000,
+     3px  3px 0 #000,
+     3px  1px 0 #000;
+}
+.head{
+  background-image: url('https://lh3.googleusercontent.com/Oa9xD1RgEHQ6uugm0HRD3m1Rz5P2XPT9ENz_gLhR_Oy6-r4VaRZqB1VlZtbnptOdfT4=h900');
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  background-blend-mode:  multiply;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}
+.page_1{
+  position: relative;
+  background-color: white ;
+  z-index: 2;
+}
+.display,.choose,.select{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 5% 10% ;
+  width: 80%
+}
+
+td, th {
+    border-bottom:  1px solid rgb(5, 82, 87);
+    text-align: center;
+    padding: 8px;
+    margin: 2px 0 ;
+    border-collapse: collapse;
+
+}
+.dataTable{border-bottom: none}
+
+#lv_minus,#lv_plus{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 20px ;
+  width: 20px;
+  height: 20px;
+  border: 1px solid black;
+  border-radius: 50% ;
+  cursor: pointer;
+}
+
+.choose tr:nth-child(even),.dataTable th {
+    background-color: rgb(242, 213, 167);
+}
+.choose tr:nth-child(odd),.dataTable td{
+    background-color: white;
+}
+
+.choose table{
+  border : 1px solid gray ;
+  border-radius: 5px;
+}
+
+table {
+  width: 100%;
+}
+
+#search{
+  cursor: pointer;
+  margin: 1%;
+  padding: 1% 3% ;
+  background-color: rgb(207, 87, 48);
+  border: none ;
+  color:white;
+  transition: .3s ease-in-out;
+}
+#search:hover{
+  background-color: rgb(250, 182, 99) ;
+}
+
+@media screen and (max-width: 768px) {
+  #search{
+    font-size: 1.2em;
+    margin: 3%;
+    width: 30%;
+    padding: 5% ;
+  }
+  #start{
+    font-size: 1.5em;
+    padding: 6px 100px ;
+  }
+}

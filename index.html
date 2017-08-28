@@ -1,0 +1,78 @@
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/index.css" />
+  </head>
+  <body>
+    <div class="head">
+      <div class="start_holder">
+        <button id='start'>遊戲開始</button>
+      </div>
+
+    </div>
+    <div class="page_1">
+      <div class="choose" id="searchCat">
+          <table>
+              <tr>
+                  <th colspan="2">稀有度</th>
+                  <th colspan="3"><select class="rare"></select></th>
+              </tr>
+              <tr>
+                  <th colspan="2">貓咪</th>
+                  <th colspan="3"><select class="cat" ><option value="-1">請選擇</option></select></th>
+              </tr>
+              <tr>
+                <th>階級</th>
+                <th>
+                  <select class="state">
+                    <option value="1">1階</option>
+                    <option value="2">2階</option>
+                    <option value="3">3階</option>
+                  </select>
+                </th>
+                <th>等級</th>
+                <th>
+                  <span id="lv_minus">-</span> 1 <input type="range" class="level" value="30" min="1"></input> 100 <span id="lv_plus">+</span>
+                </th>
+                <th class="level_num">30</th>
+              </tr>
+
+          </table>
+          <button id="search">GO</button>
+      </div>
+
+      <div class="display">
+        <img id="loading" src='https://gifimage.net/wp-content/uploads/2017/06/loading-gif-13.gif' hidden="true"/>
+        <table class="dataTable">
+        </table>
+      </div>
+    </div>
+    <div class="page_2">
+      <div class="choose">
+        <table>
+            <tr>
+                <th colspan="2">屬性</th>
+                <th colspan="3" class="select_color"></th>
+            </tr>
+            <tr>
+                <th colspan="2" rowspan="2">能力</th>
+                <th colspan="3" rowspan="2" class="select_ability"></th>
+            </tr>
+
+        </table>
+        <button id="search_ability">GO</button> 
+      </div>
+    </div>
+
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../js/index.js"></script>
+    <script src="../js/jquery.easing.1.3.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+  </body>
+</html>
