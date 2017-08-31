@@ -3,9 +3,28 @@
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/index.css" />
   </head>
   <body>
+
+    <!-- <div class="mobile">
+      <button  id="nav-buttom">
+        <span id="icon1" ></span>
+        <span id="icon2" ></span>
+        <span id="icon3" ></span>
+      </button>
+      <div id="mobile-nav" >
+        <div id="mobile-nav-container">
+          <a href="index.html" class="menu-item">首頁</a>
+          <a href="pricing.html" class="menu-item">價格方案</a>
+          <a href="feature.html" class="menu-item">服務特色</a>
+          <a href="FAQ.html" class="menu-item">問與答</a>
+          <a href="contact.html" class="menu-item">聯絡我們</a>
+        </div>
+      </div>
+    </div> -->
+
     <div class="head">
       <div class="start_holder">
         <button id='start'>遊戲開始</button>
@@ -21,26 +40,60 @@
               </tr>
               <tr>
                   <th colspan="2">貓咪</th>
-                  <th colspan="3"><select class="cat" ><option value="-1">請選擇</option></select></th>
+                  <th colspan="3"><select class="cat" ><option value="-1" class="option">請選擇</option></select></th>
               </tr>
               <tr>
                 <th>階級</th>
                 <th>
                   <select class="state">
-                    <option value="1">1階</option>
-                    <option value="2">2階</option>
-                    <option value="3">3階</option>
+                    <option value="1" class="option">1階</option>
+                    <option value="2" class="option">2階</option>
+                    <option value="3" class="option">3階</option>
                   </select>
                 </th>
                 <th>等級</th>
                 <th>
-                  <span id="lv_minus">-</span> 1 <input type="range" class="level" value="30" min="1"></input> 100 <span id="lv_plus">+</span>
+                  <input type="range" class="slider" value="30" min="1" id="level"></input>
                 </th>
-                <th class="level_num">30</th>
+                <th style="width:125px" >
+                  <span id="lv_minus" class="glyphicon glyphicon-minus"></span>
+                  <span id="level_num"> 30 </span>
+                  <span id="lv_plus" class="glyphicon glyphicon-plus"></span>
+                </th>
               </tr>
 
           </table>
-          <button id="search">GO</button>
+          <button id="search" >GO</button>
+      </div>
+      <div class="select">
+        <table>
+            <tr>
+                <th colspan="2">稀有度</th>
+                <td colspan="3" class="select_rarity"></td>
+            </tr>
+            <tr>
+                <th colspan="2">屬性</th>
+                <td colspan="3" class="select_color"></td>
+            </tr>
+            <tr>
+                <th colspan="2" rowspan="2">能力</th>
+                <td colspan="3" rowspan="2" class="select_ability"></td>
+            </tr>
+
+        </table>
+        <div style="display:flex;margin:1%">
+          <button id="search_ability" disabled>GO</button>
+          <button id="clear">Clear</button>
+        </div>
+        <div id="selected">
+
+        </div>
+        <div style="display:flex">
+          <button id="pre_sel_pg"><span class="glyphicon glyphicon-chevron-up"></span>上一排</button>
+          <button id="next_sel_pg">下一排<span class="glyphicon glyphicon-chevron-down"></span></button>
+        </div>
+
+
       </div>
 
       <div class="display" id="display_1">
@@ -50,23 +103,8 @@
       </div>
     </div>
     <div class="page_2" >
-      <div class="choose">
-        <table>
-            <tr>
-                <th colspan="2">屬性</th>
-                <th colspan="3" class="select_color"></th>
-            </tr>
-            <tr>
-                <th colspan="2" rowspan="2">能力</th>
-                <th colspan="3" rowspan="2" class="select_ability"></th>
-            </tr>
 
-        </table>
-        <button id="search_ability">GO</button>
-      </div>
     </div>
-
-
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

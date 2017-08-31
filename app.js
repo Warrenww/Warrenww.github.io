@@ -10,14 +10,11 @@ var gsjson = require('google-spreadsheet-to-json');
 
 io.on('connection', function(socket){
   console.log('a user connected');
-
+  loadcatData() ;
+  
   socket.on('load cat name',function (data) {
     console.log(data) ;
     loadcatName(data.cat) ;
-  });
-  socket.on('preload cat data',function () {
-    // console.log(data) ;
-    loadcatData() ;
   });
 
   socket.on('disconnect', function(){
@@ -25,6 +22,7 @@ io.on('connection', function(socket){
   });
 
   function loadcatName(rare) {
+    console.log('loading cat name ...') ;
       let cat = [] ;
       gsjson({
           spreadsheetId: sheet_ID,
@@ -47,6 +45,7 @@ io.on('connection', function(socket){
   }
 
   function loadcatData(data) {
+      console.log('loading cat data ...') ;
       let cat = [] ;
       gsjson({
           spreadsheetId: sheet_ID,
