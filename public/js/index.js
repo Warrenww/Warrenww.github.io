@@ -448,7 +448,7 @@ $(document).ready(function () {
   };
   xmlhttp.open("GET", url, true);
   xmlhttp.send();
-  xmlhttp.open("GET", url2, true);
-  xmlhttp.send();
+  // xmlhttp.open("GET", url2, true);
+  // xmlhttp.send();
 
 });
