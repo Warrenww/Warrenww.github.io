@@ -2,8 +2,6 @@
 $(document).ready(function () {
   // var socket = io();
   var catdata ;
-  var loadstate = false ; //wheater the data is ready
-  var nav_display = 0 ;
   var timer = new Date().getTime();
   var compare = [] ;
 
@@ -61,6 +59,7 @@ $(document).ready(function () {
     $(this).parent().children('tbody').toggle(300,'easeInOutCubic');
   }) ;
   $(document).on('click','#lower_table th',disableFilter);
+  $(document).on('click','#compare',compareCat);
 
 
   var rarity = ['基本','EX','稀有','激稀有','激稀有狂亂','超激稀有'] ;
@@ -76,16 +75,16 @@ $(document).ready(function () {
 
 
   function toggleButton() {
-  let val = Number($(this).attr('value')) ;
-  $(this).attr('value',function () {
-    val = (val+1)%2 ;
-    return val ;
-  });
-}
+    let val = Number($(this).attr('value')) ;
+    $(this).attr('value',function () {
+      val = (val+1)%2 ;
+      return val ;
+    });
+  }
   function turnPage(n) {
     let current = $("#selected").scrollTop();
     $("#selected").animate(
-      {scrollTop: current+174*n},
+      {scrollTop: current+347.88*n},
       100,'easeInOutCubic');
   }
   function levelChange(n) {
@@ -96,11 +95,10 @@ $(document).ready(function () {
   function clearSelected(className) {
     if(className == 'select'){
       $("#selected").empty();
-      $("#pre_sel_pg").hide();
-      $("#next_sel_pg").hide();
       $("#level").slider('option','value',30) ;
       $(".dataTable").html('');
-      $(".compareTarget").children('p').show().siblings().remove();
+      $(".compareTarget").children().remove();
+      $(".button_group").hide();
     }
     $("."+className).find(".button").each(function () {
       $(this).attr('value','0');
@@ -174,8 +172,7 @@ $(document).ready(function () {
     $("#selected").empty();
     $("#selected").scrollTop(0);
     $("#selected").append(condenseCatName(buffer_3));
-    $("#pre_sel_pg").show();
-    $("#next_sel_pg").show();
+    $(".button_group").css('display','flex');
 
   }
   function condenseCatName(data) {
@@ -274,32 +271,23 @@ $(document).ready(function () {
     if(slider.slider('option','disabled')) slider.slider('option','disabled',false);
     else slider.slider('option','disabled',true);
   }
+  function compareCat() {
+    compare = $('.compareTarget').sortable('toArray',{attribute:'value'});
+    console.log(compare);
+    if(compare.length == 1) displayCatData(compare[0]);
+    else{
 
-  $("#lower_table tbody").sortable({
-    scroll:false
+    }
+  }
+
+
+  $(".sortable").sortable({
+    scroll:false,
+    delay: 150
   });
-  $('#selected').sortable({
+  $('#selected').sortable('option',{
     item: '> .card-group',
-    connectWith: ".compareTarget",
-    scroll:false
-  });
-  $('.compareTarget').sortable({
-    scroll:false
-  });
-  $('.compareTarget').on('sortover',function (e,ui) {
-    let input = ui.item.children('.card:visible') ;
-    if(compare.length > 4){
-      alert('啊 塞滿了') ;
-      $("#selected").sortable('cancel');
-    }
-    else if(ui.sender.is('#selected') && compare.indexOf(input.attr('value')) == -1 ){
-      compare = $('.compareTarget').sortable('toArray','value');
-      console.log(compare);
-      $(this).children('p').hide();
-      input.clone().appendTo(this);
-      $("#selected").sortable('cancel');
-    }
-    else $("#selected").sortable('cancel');
+    connectWith: ".compareTarget"
   });
 
   $("#level").on("slide", function(e,ui) {
@@ -333,9 +321,36 @@ $(document).ready(function () {
   $(".slider").on("slidechange", function(e,ui) {
     $(this).parent().siblings('td.value_display').text(ui.value);
   });
+  $('.compareTarget').on('sortover',function (e,ui) {
+    $("#compare").show();
+    let input = ui.item.children('.card:visible') ;
+    compare = $('.compareTarget').sortable('toArray',{attribute:'value'});
+    if(compare.indexOf(input.attr('value')) != -1){
+      let repeat = $(this).find('[value='+input.attr('value')+']') ;
+      repeat.css('border-color','rgb(219, 87, 87)');
+      setTimeout(function () {
+        repeat.css('border-color','white');
+      },1000);
+      $("#selected").sortable('cancel');
+    }
+    else if(compare.length > 3){
+      alert('啊 塞滿了') ;
+      $("#selected").sortable('cancel');
+    }
+    else if(ui.sender.is('#selected')){
+      input.clone().appendTo(this);
+      $("#selected").sortable('cancel');
+    }
+    else $("#selected").sortable('cancel');
+  });
+  $('.compareTarget').on('sortremove',function (e,ui) {
+    if(ui.sender.is('.compareTarget')) ui.item.remove();
+  });
+
+
 
   var xmlhttp = new XMLHttpRequest();
-  var url = "../data.txt";
+  var url = "../Catdata.txt";
 
   xmlhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -348,9 +363,5 @@ $(document).ready(function () {
   };
   xmlhttp.open("GET", url, true);
   xmlhttp.send();
-
-
-
-
 
 });

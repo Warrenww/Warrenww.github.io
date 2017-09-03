@@ -31,7 +31,7 @@ io.on('connection', function(socket){
       })
       .then(function(result) {
           socket.emit('push cat data',JSON.stringify(result));
-          fs.writeFile('public/data.txt', JSON.stringify(result), (err) => {
+          fs.writeFile('public/Catdata.txt', JSON.stringify(result), (err) => {
             if (err) throw err;
             console.log('It\'s saved!');
           });

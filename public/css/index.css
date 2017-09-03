@@ -9,48 +9,6 @@ body,html{
   -o-user-select:none;
   cursor: default;
 }
-#nav-buttom{
-  display: flex;
-  position: fixed;
-  top: 0;
-  right: 15px;
-  background-color: rgba(0,0,0,0);
-  width: 50px;
-  height: 50px;
-  flex-direction: column;
-  border: 0;
-  overflow: hidden;
-  z-index: 150;
-  padding: 15px;
-  transition: all .4s ease-in-out;
-}
-#icon1,#icon2,#icon3{
-  position: absolute;
-  width: 20px;
-  height: 3px;
-  border-radius: 15%;
-  background-color: white;
-  transition: all .8s ease-in-out;
-}
-#icon1{top:15px;}
-#icon2{top:23.75px;}
-#icon3{top:32.5px;}
-#nav-buttom:hover{
-  cursor: pointer;
-  border: 0;
-}
-#mobile-nav-container{
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  padding-top: 5%;
-  right:  -200px;
-  width: 200px;
-  height: 100%;
-  background-color: rgba(0,0,0,.9);
-  transition: all .8s ease-in-out;
-  z-index: 9;
-}
 .start_holder{
   display: flex;
   justify-content: center;
@@ -138,6 +96,7 @@ option{
   background-color: white ;
   position: relative;
   z-index: 2;
+  overflow-x: hidden;
 }
 .page_1,.page_2{background-image: url("footage/search_BG.png");}
 .display,.select{
@@ -178,8 +137,12 @@ td, th {
   background-color: rgb(106, 236, 249);
 }
 #pre_sel_pg,#next_sel_pg{
-  display: none;
   margin: 0 20px;
+}
+.button_group{
+  display:none;
+  width:100%;
+  justify-content: center
 }
 .dataTable th,.select th{
   background-color: rgba(242, 213, 167, 0.93);
@@ -204,11 +167,12 @@ td, th {
   width: 180px;
   justify-content: center;
   margin: 10px ;
+  transition: .3s ease-in-out;
 }
 #selected{
   margin: 2% 0 ;
   width: 105%;
-  height: 174px;
+  height: 347.88px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -264,16 +228,12 @@ table {
   background-color: rgba(255, 255, 255, 0.64) ;
   flex:1 ;
   padding: 10px;
-}
-.compareTarget p{
-  position: relative;
-  text-align: center;
-  top: 40%;
-  color: lightgray;
-  font-size: 1.2em;
-  z-index: 2;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 .compareTarget .card{
+  margin: 10px 0;
   height: 80px;
   width: 120px;
 }

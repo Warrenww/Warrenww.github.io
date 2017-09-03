@@ -18,7 +18,7 @@
     </div>
     <div class="page_1">
 
-      <div style="text-align:left">
+      <div style="text-align:left" hidden>
         <p><span class="glyphicon glyphicon-info-sign"></span> 如欲清除某一列中全部的選擇，點選該列的名稱即可</p>
         <p><span class="glyphicon glyphicon-info-sign"></span> 調整過等級後，請在下方再次點選該貓咪</p>
         <p><span class="glyphicon glyphicon-info-sign"></span> 點選範圍選擇器的上下界，可以手動輸入值</p>
@@ -60,7 +60,7 @@
               更多篩選器
             </th>
           </thead>
-          <tbody hidden>
+          <tbody class="sortable" hidden>
             <tr>
               <th colspan="2" style="height:50px" value='0' name='lv1體力' lv-bind=true>體力下限</th>
               <td style="width:500px" class="select_hp" colspan="2">
@@ -89,22 +89,24 @@
         </div>
         <div style="display:flex;width:100%">
           <div class="compareSorce">
-            <div id="selected">
+            <div id="selected" class="sortable">
             </div>
-            <div style="display:flex">
+            <div class="button_group" >
               <button id="pre_sel_pg"><span class="glyphicon glyphicon-chevron-up"></span>上一排</button>
+              <button id="compare" hidden>compare</span></button>
               <button id="next_sel_pg">下一排<span class="glyphicon glyphicon-chevron-down"></span></button>
             </div>
           </div>
-          <div class="compareTarget">
-            <p>將想比較的貓咪拖曳進來</p>
+          <div class="compareTarget sortable">
+            <!-- <p>將想比較的貓咪拖曳進來</p> -->
           </div>
 
         </div>
 
       <div class="display" id="display_1">
-        <img id="loading" src='https://gifimage.net/wp-content/uploads/2017/06/loading-gif-13.gif' hidden="true"/>
         <table class="dataTable">
+        </table>
+        <table class="compareTable">
         </table>
       </div>
     </div>
