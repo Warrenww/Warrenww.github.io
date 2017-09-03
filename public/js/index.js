@@ -1,13 +1,13 @@
 
 $(document).ready(function () {
-  var socket = io();
+  // var socket = io();
   var catdata ;
   var loadstate = false ; //wheater the data is ready
   var nav_display = 0 ;
   var timer = new Date().getTime();
   var compare = [] ;
 
-  $(document).on('click','#updateCatData',function () {socket.emit('force_update_cat_data');})
+  // $(document).on('click','#updateCatData',function () {socket.emit('force_update_cat_data');});
   $(document).on('click','#start',function () {
     var myWindow;
     myWindow = window.open("http://battlecats-db.com/unit/status_r_all.html", "myWindow", "width=1,height=1");
