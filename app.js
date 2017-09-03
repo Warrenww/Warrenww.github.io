@@ -10,42 +10,19 @@ var gsjson = require('google-spreadsheet-to-json');
 
 io.on('connection', function(socket){
   console.log('a user connected');
-  loadcatData() ;
-  
-  socket.on('load cat name',function (data) {
-    console.log(data) ;
-    loadcatName(data.cat) ;
+
+  socket.on('force_update_cat_data', (data,callback) =>{
+    console.log('Someone force me to load cat data ...QAQ') ;
+    loadcatData() ;
   });
 
   socket.on('disconnect', function(){
     console.log('user disconnected');
   });
 
-  function loadcatName(rare) {
-    console.log('loading cat name ...') ;
-      let cat = [] ;
-      gsjson({
-          spreadsheetId: sheet_ID,
-          worksheet: rare,
-          hash : 'id'
-      })
-      .then(function(result) {
-          for(let i in result){
-            let obj = {} ;
-            obj.id = result[i].id ;
-            obj.name = result[i]['全名'] ;
-            cat.push(obj) ;
-          }
-          socket.emit('push cat name',cat);
-      })
-      .catch(function(err) {
-          console.log(err.message);
-          console.log(err.stack);
-      });
-  }
 
   function loadcatData(data) {
-      console.log('loading cat data ...') ;
+
       let cat = [] ;
       gsjson({
           spreadsheetId: sheet_ID,
@@ -53,7 +30,11 @@ io.on('connection', function(socket){
           hash : 'id'
       })
       .then(function(result) {
-          socket.emit('push cat data',result);
+          socket.emit('push cat data',JSON.stringify(result));
+          fs.writeFile('public/data.txt', JSON.stringify(result), (err) => {
+            if (err) throw err;
+            console.log('It\'s saved!');
+          });
       })
       .catch(function(err) {
           console.log(err.message);
