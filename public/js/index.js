@@ -276,14 +276,90 @@ $(document).ready(function () {
     console.log(compare);
     if(compare.length == 1) displayCatData(compare[0]);
     else{
+      $(".compareTable").empty();
+      $(".compareTable").append(
+        "<div style='flex:1'>"+
+        "<table>"+
+        "<tr>"+
+        "<th style='height:80px;''>Picture</th>"+
+        "</tr><tr>"+
+        "<th>全名</th>"+
+        "</tr><tr>"+
+        "<th>體力</th>"+
+        "</tr><tr>"+
+        "<th>KB</th>"+
+        "</tr><tr>"+
+        "<th>硬度</th>"+
+        "</tr><tr>"+
+        "<th>攻擊力</th>"+
+        "</tr><tr>"+
+        "<th>DPS</th>"+
+        "</tr><tr>"+
+        "<th>射程</th"+
+        "</tr><tr>"+
+        "<th>攻頻</th>"+
+        "</tr><tr>"+
+        "<th>跑速</th>"+
+        "</tr><tr>"+
+        "<th>範圍</th>"+
+        "</tr><tr>"+
+        "<th>花費</th>"+
+        "</tr><tr>"+
+        "<th>再生産</th>"+
+        "</tr><tr>"+
+        "<th>特性</th>"+
+        "</tr>"+
+        "</table>"+
+        "</div>"
+      );
+      for(let i in compare){
+        let data = catdata[compare[i]];
+        console.log(data);
 
+        $(".compareTable").append(
+          "<div style='flex:1'>"+
+          "<table>"+
+          "<tr>"+
+          "<th style='height:80px;padding:0'><img src=\"http://imgs-server.com/battlecats/u"+compare[i]+".png\"style='height:100%'></th>"+
+          "</tr><tr>"+
+          "<th>"+data.全名+"</th>"+
+          "</tr><tr>"+
+          "<td>"+levelToValue(data.lv1體力,data.稀有度).toFixed(0)+"</td>"+
+          "</tr><tr>"+
+          "<td>"+data.kb+"</td>"+
+          "</tr><tr>"+
+          "<td>"+(levelToValue(data.lv1體力,data.稀有度)/data.kb).toFixed(0)+"</td>"+
+          "</tr><tr>"+
+          "<td>"+levelToValue(data.lv1攻擊,data.稀有度).toFixed(0)+"</td>"+
+          "</tr><tr>"+
+          "<td>"+(levelToValue(data.lv1攻擊,data.稀有度)/data.攻頻).toFixed(0)+"</td>"+
+          "</tr><tr>"+
+          "<td>"+data.射程+"</td>"+
+          "</tr><tr>"+
+          "<td>"+data.攻頻.toFixed(0)+"</td>"+
+          "</tr><tr>"+
+          "<td>"+data.速度+"</td>"+
+          "</tr><tr>"+
+          "<td>"+data.範圍+"</td>"+
+          "</tr><tr>"+
+          "<td>"+data.花費+"</td>"+
+          "</tr><tr>"+
+          "<td>"+data.再生産.toFixed(0)+"</td>"+
+          "</tr><tr>"+
+          "<td>"+data.特性+"</td>"+
+          "</tr>"+
+          "</table>"+
+          "</div>"
+        );
+
+      }
     }
   }
 
 
   $(".sortable").sortable({
     scroll:false,
-    delay: 150
+    delay:150
   });
   $('#selected').sortable('option',{
     item: '> .card-group',
@@ -343,14 +419,23 @@ $(document).ready(function () {
     }
     else $("#selected").sortable('cancel');
   });
-  $('.compareTarget').on('sortremove',function (e,ui) {
-    if(ui.sender.is('.compareTarget')) ui.item.remove();
+  $('.compareTarget').on('sortout',function (e,ui) {
+    let x1 = $(this).position().left,
+        x2 = x1 + $(this).width(),
+        y1 = $(this).position().top,
+        y2 = y1 + $(this).height(),
+        x = ui.position.left,
+        y = ui.position.top ;
+
+    if(x<x1||x>x2||y<y1||y>y2) if(ui.sender.is('.compareTarget')) ui.item.remove();
+
   });
 
 
 
   var xmlhttp = new XMLHttpRequest();
   var url = "public/js/Catdata.txt";
+  var url2 = "js/Catdata.txt" ;
 
   xmlhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -362,6 +447,8 @@ $(document).ready(function () {
       }
   };
   xmlhttp.open("GET", url, true);
+  xmlhttp.send();
+  xmlhttp.open("GET", url2, true);
   xmlhttp.send();
 
 });

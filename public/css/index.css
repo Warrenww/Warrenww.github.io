@@ -237,6 +237,8 @@ table {
   height: 80px;
   width: 120px;
 }
+.compareTable{display: flex;}
+.compareTable table{flex:1}
 @media screen and (max-width: 768px) {
   #search{
     font-size: 1.2em;
