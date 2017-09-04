@@ -63,7 +63,7 @@
           <tbody class="sortable" hidden>
             <tr>
               <th colspan="2" style="height:50px" value='0' name='lv1體力' lv-bind=true>體力下限</th>
-              <td style="width:500px" class="select_hp" colspan="2">
+              <td style="width:500px" colspan="2">
                 <div id="select_hp" class='slider'></div>
               </td>
               <td colspan="1" class="value_display">
@@ -72,11 +72,29 @@
             </tr>
             <tr>
               <th colspan="2" style="height:50px" value='0' name='kb' lv-bind=false>KB</th>
-              <td style="width:500px" class="select_hp" colspan="2">
+              <td style="width:500px" colspan="2">
                 <div id="select_kb" class='slider'></div>
               </td>
               <td colspan="1" class="value_display">
                 3
+              </td>
+            </tr>
+            <tr>
+              <th colspan="2" style="height:50px" value='0' name='射程' lv-bind=false>射程</th>
+              <td style="width:500px" colspan="2">
+                <div id="select_distance" class='slider'></div>
+              </td>
+              <td colspan="1" class="value_display">
+                300
+              </td>
+            </tr>
+            <tr>
+              <th colspan="2" style="height:50px" value='0' name='lv1攻擊' lv-bind=true>攻擊力</th>
+              <td style="width:500px" colspan="2">
+                <div id="select_atk" class='slider'></div>
+              </td>
+              <td colspan="1" class="value_display">
+                30000
               </td>
             </tr>
           </tbody>
@@ -103,10 +121,10 @@
 
         </div>
 
-      <div class="display" id="display_1">
+      <div class="display">
         <table class="dataTable">
         </table>
-        <div class="compareTable">
+        <div class="compareTable sortable">
         </div>
       </div>
     </div>

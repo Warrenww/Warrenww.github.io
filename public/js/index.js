@@ -1,11 +1,11 @@
 
 $(document).ready(function () {
-  // var socket = io();
+  var socket = io();
   var catdata ;
   var timer = new Date().getTime();
   var compare = [] ;
 
-  // $(document).on('click','#updateCatData',function () {socket.emit('force_update_cat_data');});
+  $(document).on('click','#updateCatData',function () {socket.emit('force_update_cat_data');});
   $(document).on('click','#start',function () {
     var myWindow;
     myWindow = window.open("http://battlecats-db.com/unit/status_r_all.html", "myWindow", "width=1,height=1");
@@ -60,6 +60,7 @@ $(document).ready(function () {
   }) ;
   $(document).on('click','#lower_table th',disableFilter);
   $(document).on('click','#compare',compareCat);
+  $(document).on('click','.compareTable .comparedatahead th',sortCompareCat);
 
 
   var rarity = ['基本','EX','稀有','激稀有','激稀有狂亂','超激稀有'] ;
@@ -73,25 +74,6 @@ $(document).ready(function () {
                 '攻城','鋼鐵'];
   for(let i in ability) $(".select_ability").append("<span class='button' name='["+ability[i]+"]' value='0'>"+ability[i]+"</span>") ;
 
-
-  function toggleButton() {
-    let val = Number($(this).attr('value')) ;
-    $(this).attr('value',function () {
-      val = (val+1)%2 ;
-      return val ;
-    });
-  }
-  function turnPage(n) {
-    let current = $("#selected").scrollTop();
-    $("#selected").animate(
-      {scrollTop: current+347.88*n},
-      100,'easeInOutCubic');
-  }
-  function levelChange(n) {
-    original = Number($("#level").slider( "option", "value" ));
-    if(original == 1 || original == 100) return ;
-    $("#level").slider( "option", "value" ,original+n);
-  }
   function clearSelected(className) {
     if(className == 'select'){
       $("#selected").empty();
@@ -99,6 +81,7 @@ $(document).ready(function () {
       $(".dataTable").html('');
       $(".compareTarget").children().remove();
       $(".button_group").hide();
+      $("#lower_table tbody").hide();
     }
     $("."+className).find(".button").each(function () {
       $(this).attr('value','0');
@@ -106,6 +89,69 @@ $(document).ready(function () {
     let This = $("."+className).children().slider('widget');
     let init = This.attr('init-val');
     This.slider('value',init);
+  }
+  function condenseCatName(data) {
+    console.log('condensing....');
+    let now = '000' ;
+    let image = 'http://imgs-server.com/battlecats/u' ;
+    let html = '<span class="card-group" hidden>' ;
+    for(let i in data){
+      let name = data[i].全名;
+      let id = data[i].id ;
+      let current = id.substring(0,3) ;
+      if(current == now){
+        html += '<span class="card" value="'+id+'" '+
+                'style="background-image:url('+image+id+'.png);display:none">'+
+                name+'</span>' ;
+      }
+      else{
+        html += '</span>' ;
+        html += '<span class="card-group" value="'+current+'">'+
+                '<span class="glyphicon glyphicon-refresh"></span>'+
+                '<span class="card" value="'+id+'" '+
+                'style="background-image:url('+image+id+'.png)">'+
+                name+'</span>' ;
+        now = current ;
+      }
+    }
+    return html ;
+  }
+  function displayCatData(id) {
+    let data = catdata[id] ;
+    $(".dataTable").empty();
+    $('.compareTable').empty();
+    $(".dataTable").append(
+      "<tr>"+
+      "<th style='height:80px;padding:0'><img src=\"http://imgs-server.com/battlecats/u"+id+".png\"style='height:100%'></th>"+
+      "<th colspan='5'>"+data.全名+"</th>"+
+      "</tr><tr>"+
+      "<th>體力</th><td>"+levelToValue(data.lv1體力,data.稀有度).toFixed(0)+"</td>"+
+      "<th>KB</th><td>"+data.kb+"</td>"+
+      "<th>硬度</th><td>"+levelToValue(data.lv1硬度,data.稀有度).toFixed(0)+"</td>"+
+      "</tr><tr>"+
+      "<th>攻擊力</th><td>"+levelToValue(data.lv1攻擊,data.稀有度).toFixed(0)+"</td>"+
+      "<th>DPS</th><td>"+levelToValue(data.lv1dps,data.稀有度).toFixed(0)+"</td>"+
+      "<th>射程</th><td>"+data.射程+"</td>"+
+      "</tr><tr>"+
+      "<th>攻頻</th><td>"+data.攻頻.toFixed(1)+" s</td>"+
+      "<th>跑速</th><td>"+data.速度+"</td>"+
+      "<td colspan='2' rowspan='2'>"+data.範圍+"</td>"+
+      "</tr><tr>"+
+      "<th>花費</th><td>"+data.花費+"</td>"+
+      "<th>再生産</th><td>"+data.再生産.toFixed(1)+" s</td>"+
+      "</tr><tr>"+
+      "<td colspan='6'>"+data.特性+"</td>"+
+      "</tr>"
+    );
+    scroll_to_class('display',0) ;
+  }
+  function disableFilter() {
+    let val = Number($(this).attr('value'));
+    val = (val+1) %2 ;
+    $(this).attr('value',val);
+    let slider = $(this).parent().children('td').eq(0).children().slider('widget');
+    if(slider.slider('option','disabled')) slider.slider('option','disabled',false);
+    else slider.slider('option','disabled',true);
   }
   function search() {
     let rarity = $(".select_rarity [value=1]"),
@@ -175,110 +221,16 @@ $(document).ready(function () {
     $(".button_group").css('display','flex');
 
   }
-  function condenseCatName(data) {
-    console.log('condensing....');
-    let now = '000' ;
-    let image = 'http://imgs-server.com/battlecats/u' ;
-    let html = '<span class="card-group" hidden>' ;
-    for(let i in data){
-      let name = data[i].全名;
-      let id = data[i].id ;
-      let current = id.substring(0,3) ;
-      if(current == now){
-        html += '<span class="card" value="'+id+'" '+
-                'style="background-image:url('+image+id+'.png);display:none">'+
-                name+'</span>' ;
-      }
-      else{
-        html += '</span>' ;
-        html += '<span class="card-group" value="'+current+'">'+
-                '<span class="glyphicon glyphicon-refresh"></span>'+
-                '<span class="card" value="'+id+'" '+
-                'style="background-image:url('+image+id+'.png)">'+
-                name+'</span>' ;
-        now = current ;
-      }
-    }
-    return html ;
-  }
-  function displayCatData(id) {
-    let data = catdata[id] ;
-    $(".dataTable").empty();
-    $(".dataTable").append(
-      "<tr>"+
-      "<th style='height:80px;padding:0'><img src=\"http://imgs-server.com/battlecats/u"+id+".png\"style='height:100%'></th>"+
-      "<th colspan='5'>"+data.全名+"</th>"+
-      "</tr><tr>"+
-      "<th>體力</th><td>"+levelToValue(data.lv1體力,data.稀有度).toFixed(0)+"</td>"+
-      "<th>KB</th><td>"+data.kb+"</td>"+
-      "<th>硬度</th><td>"+(levelToValue(data.lv1體力,data.稀有度)/data.kb).toFixed(0)+"</td>"+
-      "</tr><tr>"+
-      "<th>攻擊力</th><td>"+levelToValue(data.lv1攻擊,data.稀有度).toFixed(0)+"</td>"+
-      "<th>DPS</th><td>"+(levelToValue(data.lv1攻擊,data.稀有度)/data.攻頻).toFixed(0)+"</td>"+
-      "<th>射程</th><td>"+data.射程+"</td>"+
-      "</tr><tr>"+
-      "<th>攻頻</th><td>"+data.攻頻.toFixed(0)+"</td>"+
-      "<th>跑速</th><td>"+data.速度+"</td>"+
-      "<td colspan='2' rowspan='2'>"+data.範圍+"</td>"+
-      "</tr><tr>"+
-      "<th>花費</th><td>"+data.花費+"</td>"+
-      "<th>再生産</th><td>"+data.再生産.toFixed(0)+"</td>"+
-      "</tr><tr>"+
-      "<td colspan='6'>"+data.特性+"</td>"+
-      "</tr>"
-    );
-    scroll_to_div('display_1') ;
-  }
-  function levelToValue(origin,rarity) {
-    let lv = Number($("#level").slider( "option", "value" )) ;
-    let limit,result ;
-    switch (rarity) {
-      case '稀有':
-      limit = 70 ;
-      break;
-      case '激稀有狂亂':
-      limit = 20 ;
-      break;
-      default:
-      limit = 60 ;
-    }
-    return lv<limit ? (0.8+0.2*lv)*origin : origin*(0.8+0.2*limit)+origin*0.1*(lv-limit) ;
-  }
-  function scroll_to_div(div_id){
-    $('html,body').animate(
-      {scrollTop: $("#"+div_id).offset().top},
-      1000,'easeInOutCubic');
-  }
-  function scroll_to_class(class_name,n) {
-    $('html,body').animate(
-      {scrollTop: $("."+class_name).eq(n).offset().top},
-      1000,'easeInOutCubic');
-  }
-  function toggleCatStage() {
-    let current = $(this).parent().children(".card:visible").next().attr('value');
-    if(current != undefined){
-      $(this).parent().children(".card:visible").hide().next().show();
-    }
-    else{
-      $(this).parent().children(".card:visible").hide().parent().children().eq(1).show();
-    }
-  }
-  function disableFilter() {
-    let val = Number($(this).attr('value'));
-    val = (val+1) %2 ;
-    $(this).attr('value',val);
-    let slider = $(this).parent().children('td').eq(0).children().slider('widget');
-    if(slider.slider('option','disabled')) slider.slider('option','disabled',false);
-    else slider.slider('option','disabled',true);
-  }
   function compareCat() {
     compare = $('.compareTarget').sortable('toArray',{attribute:'value'});
     console.log(compare);
+    scroll_to_class("display",0);
+    $(".compareTable").empty();
+    $(".dataTable").empty();
     if(compare.length == 1) displayCatData(compare[0]);
     else{
-      $(".compareTable").empty();
       $(".compareTable").append(
-        "<div style='flex:1'>"+
+        "<div style='flex:1' class='comparedatahead'>"+
         "<table>"+
         "<tr>"+
         "<th style='height:80px;''>Picture</th>"+
@@ -315,45 +267,76 @@ $(document).ready(function () {
       for(let i in compare){
         let data = catdata[compare[i]];
         console.log(data);
-
         $(".compareTable").append(
-          "<div style='flex:1'>"+
+          "<div style='flex:1' class='comparedata' id='"+data.id+"'>"+
           "<table>"+
           "<tr>"+
           "<th style='height:80px;padding:0'><img src=\"http://imgs-server.com/battlecats/u"+compare[i]+".png\"style='height:100%'></th>"+
           "</tr><tr>"+
-          "<th>"+data.全名+"</th>"+
+          "<th id='全名'>"+data.全名+"</th>"+
           "</tr><tr>"+
-          "<td>"+levelToValue(data.lv1體力,data.稀有度).toFixed(0)+"</td>"+
+          "<td id='體力'>"+levelToValue(data.lv1體力,data.稀有度).toFixed(0)+"</td>"+
           "</tr><tr>"+
-          "<td>"+data.kb+"</td>"+
+          "<td id='KB'>"+data.kb+"</td>"+
           "</tr><tr>"+
-          "<td>"+(levelToValue(data.lv1體力,data.稀有度)/data.kb).toFixed(0)+"</td>"+
+          "<td id='硬度'>"+levelToValue(data.lv1硬度,data.稀有度).toFixed(0)+"</td>"+
           "</tr><tr>"+
-          "<td>"+levelToValue(data.lv1攻擊,data.稀有度).toFixed(0)+"</td>"+
+          "<td id='攻擊力'>"+levelToValue(data.lv1攻擊,data.稀有度).toFixed(0)+"</td>"+
           "</tr><tr>"+
-          "<td>"+(levelToValue(data.lv1攻擊,data.稀有度)/data.攻頻).toFixed(0)+"</td>"+
+          "<td id='DPS'>"+levelToValue(data.lv1dps,data.稀有度).toFixed(0)+"</td>"+
           "</tr><tr>"+
-          "<td>"+data.射程+"</td>"+
+          "<td id='射程'>"+data.射程+"</td>"+
           "</tr><tr>"+
-          "<td>"+data.攻頻.toFixed(0)+"</td>"+
+          "<td id='攻頻'>"+data.攻頻.toFixed(1)+"</td>"+
           "</tr><tr>"+
-          "<td>"+data.速度+"</td>"+
+          "<td id='跑速'>"+data.速度+"</td>"+
           "</tr><tr>"+
-          "<td>"+data.範圍+"</td>"+
+          "<td id='範圍'>"+data.範圍+"</td>"+
           "</tr><tr>"+
-          "<td>"+data.花費+"</td>"+
+          "<td id='花費'>"+data.花費+"</td>"+
           "</tr><tr>"+
-          "<td>"+data.再生産.toFixed(0)+"</td>"+
+          "<td id='再生産'>"+data.再生産.toFixed(1)+"</td>"+
           "</tr><tr>"+
           "<td>"+data.特性+"</td>"+
           "</tr>"+
           "</table>"+
           "</div>"
         );
-
       }
     }
+    highlightTheBest();
+  }
+  function highlightTheBest() {
+    $('.comparedatahead tbody').children().each(function () {
+      let name = $(this).text();
+      if(name == 'Picture' || name == '全名' ||name == '特性' || name =='範圍' || name == 'KB') return ;
+      // console.log(name);
+      let arr = [];
+      let max = {id:'',item: -1},
+          min = {id:'',item: 1e10};
+
+      $(".comparedata").each(function () {
+        let obj = {};
+        obj = {
+          id:$(this).attr('id'),
+          item:Number($(this).find("#"+name).text())
+        }
+        arr.push(obj);
+      });
+      // console.log(arr);
+      for(let i in arr) {
+        if(arr[i].item > max.item) max = arr[i];
+        if(arr[i].item < min.item) min = arr[i];
+      }
+      // console.log(max);
+      // console.log(min);
+      if(name == '再生産' || name == '攻頻' || name == '花費') $(".compareTable").children("#"+min.id).find("#"+name).css({'color':'rgb(219, 82, 82)','font-weight':'bold'});
+      else $(".compareTable").children("#"+max.id).find("#"+name).css({'color':'rgb(219, 82, 82)','font-weight':'bold'});
+      // $(".compareTable").children("#"+min.id).find("#"+name).css('color','rgb(82, 174, 219)');
+    });
+  }
+  function sortCompareCat() {
+    let name = $(this).text();
   }
 
 
@@ -361,23 +344,20 @@ $(document).ready(function () {
     scroll:false,
     delay:150
   });
-  $('#selected').sortable('option',{
-    item: '> .card-group',
-    connectWith: ".compareTarget"
-  });
-
-  $("#level").on("slide", function(e,ui) {
-  	$("#level_num").text(ui.value);
-  });
-  $("#level").on("slidechange", function(e,ui) {
-  	$("#level_num").text(ui.value);
-  });
   $(".slider").slider();
+
   $("#level").slider('option',{
     animate: 0,
     max: 100,
     min: 1,
     value: 30,
+  });
+  $('#selected').sortable('option',{
+    item: '> .card-group',
+    connectWith: ".compareTarget"
+  });
+  $('.compareTarget').sortable('option',{
+    item: '> comparedata'
   });
   $("#select_hp").slider('option',{
     'max':200000,
@@ -390,7 +370,25 @@ $(document).ready(function () {
     'min':1,
     'value':3
   });
+  $("#select_distance").slider('option',{
+    'max':1000,
+    'min':0,
+    'value':300,
+    'step':10
+  });
+  $("#select_atk").slider('option',{
+    'max':200000,
+    'min':1000,
+    'step':1000,
+    'value':30000
+  });
 
+  $("#level").on("slide", function(e,ui) {
+    $("#level_num").text(ui.value);
+  });
+  $("#level").on("slidechange", function(e,ui) {
+    $("#level_num").text(ui.value);
+  });
   $(".slider").on("slide", function(e,ui) {
     $(this).parent().siblings('td.value_display').text(ui.value);
   });
@@ -399,6 +397,7 @@ $(document).ready(function () {
   });
   $('.compareTarget').on('sortover',function (e,ui) {
     $("#compare").show();
+    scroll_to_class('compareTarget',0);
     let input = ui.item.children('.card:visible') ;
     compare = $('.compareTarget').sortable('toArray',{attribute:'value'});
     if(compare.indexOf(input.attr('value')) != -1){
@@ -426,12 +425,62 @@ $(document).ready(function () {
         y2 = y1 + $(this).height(),
         x = ui.position.left,
         y = ui.position.top ;
-
     if(x<x1||x>x2||y<y1||y>y2) if(ui.sender.is('.compareTarget')) ui.item.remove();
 
   });
 
-
+  function scroll_to_div(div_id){
+    $('html,body').animate(
+      {scrollTop: $("#"+div_id).offset().top},
+      1000,'easeInOutCubic');
+  }
+  function scroll_to_class(class_name,n) {
+    $('html,body').animate(
+      {scrollTop: $("."+class_name).eq(n).offset().top},
+      1000,'easeInOutCubic');
+  }
+  function toggleButton() {
+    let val = Number($(this).attr('value')) ;
+    $(this).attr('value',function () {
+      val = (val+1)%2 ;
+      return val ;
+    });
+  }
+  function toggleCatStage() {
+    let current = $(this).parent().children(".card:visible").next().attr('value');
+    if(current != undefined){
+      $(this).parent().children(".card:visible").hide().next().show();
+    }
+    else{
+      $(this).parent().children(".card:visible").hide().parent().children().eq(1).show();
+    }
+  }
+  function turnPage(n) {
+    let current = $("#selected").scrollTop();
+    $("#selected").animate(
+      {scrollTop: current+347.88*n},
+      100,'easeInOutCubic');
+  }
+  function levelChange(n) {
+    original = Number($("#level").slider( "option", "value" ));
+    if(original == 1 || original == 100) return ;
+    $("#level").slider( "option", "value" ,original+n);
+  }
+  function levelToValue(origin,rarity) {
+    let lv = Number($("#level").slider( "option", "value" )) ;
+    let limit,result ;
+    switch (rarity) {
+      case '稀有':
+      limit = 70 ;
+      break;
+      case '激稀有狂亂':
+      limit = 20 ;
+      break;
+      default:
+      limit = 60 ;
+    }
+    return lv<limit ? (0.8+0.2*lv)*origin : origin*(0.8+0.2*limit)+origin*0.1*(lv-limit) ;
+  }
 
   var xmlhttp = new XMLHttpRequest();
   var url = "public/js/Catdata.txt";
@@ -448,7 +497,7 @@ $(document).ready(function () {
   };
   xmlhttp.open("GET", url, true);
   xmlhttp.send();
-  // xmlhttp.open("GET", url2, true);
-  // xmlhttp.send();
+  xmlhttp.open("GET", url2, true);
+  xmlhttp.send();
 
 });
