@@ -309,8 +309,14 @@ $(document).ready(function () {
   function highlightTheBest() {
     $('.comparedatahead tbody').children().each(function () {
       let name = $(this).text();
-      if(name == 'Picture' || name == '全名' ||name == '特性' || name =='範圍' || name == 'KB') return ;
+      if(name == 'Picture' || name == '全名' ||name == '特性' || name == 'KB') return ;
       // console.log(name);
+      if(name == '範圍'){
+        $(".comparedata").each(function () {
+          if($(this).find("#"+name).text() == '範圍') $(this).find("#"+name).attr('class','best') ;
+        });
+        return ;
+      }
       let arr = [];
       let max = {id:'',item: -1},
           min = {id:'',item: 1e10};
@@ -330,13 +336,42 @@ $(document).ready(function () {
       }
       // console.log(max);
       // console.log(min);
-      if(name == '再生産' || name == '攻頻' || name == '花費') $(".compareTable").children("#"+min.id).find("#"+name).css({'color':'rgb(219, 82, 82)','font-weight':'bold'});
-      else $(".compareTable").children("#"+max.id).find("#"+name).css({'color':'rgb(219, 82, 82)','font-weight':'bold'});
+      if(name == '再生産' || name == '攻頻' || name == '花費') $(".compareTable").children("#"+min.id).find("#"+name).attr('class','best');
+      else $(".compareTable").children("#"+max.id).find("#"+name).attr('class','best');
       // $(".compareTable").children("#"+min.id).find("#"+name).css('color','rgb(82, 174, 219)');
     });
   }
   function sortCompareCat() {
     let name = $(this).text();
+    var arr = [] ;
+    if(name == 'Picture' || name == '全名' ||name == '特性' || name =='範圍' || name == 'KB') return ;
+    $(".comparedata").each(function () {
+      let obj = {};
+      obj = {
+        id:$(this).attr('id'),
+        item:Number($(this).find("#"+name).text())
+      }
+      arr.push(obj);
+    });
+    // console.log(name);
+    console.log(arr);
+    for(let i=0;i<arr.length;i++){
+
+      for(let j=i+1;j<arr.length;j++){
+        if(arr[j].item>arr[i].item){
+          $(".compareTable").children('#'+arr[i].id).before( $(".compareTable").children('#'+arr[j].id));
+        }
+        arr = [] ;
+        $(".comparedata").each(function () {
+          let obj = {};
+          obj = {
+            id:$(this).attr('id'),
+            item:Number($(this).find("#"+name).text())
+          }
+          arr.push(obj);
+        });
+      }
+    }
   }
 
 
