@@ -17,6 +17,18 @@ body,html{
   width: 100%;
   z-index: 1 ;
 }
+.search{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  padding: 10px
+}
+.search input{
+  height: 30px;
+  width: 200px;
+  padding: 10px;
+}
 button,.button,.selected_cat{
   background-color: rgb(227, 158, 73) ;
   background: linear-gradient(rgb(245, 216, 76), rgb(199, 133, 39));
@@ -241,8 +253,6 @@ table {
 .compareTable table{flex:1}
 .best{
   color:rgb(247, 175, 67);
-  font-size: 18px;
-  padding: 7px 8px ;
   font-weight: bolder;
 }
 @media screen and (max-width: 768px) {

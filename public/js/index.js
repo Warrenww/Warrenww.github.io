@@ -61,7 +61,14 @@ $(document).ready(function () {
   $(document).on('click','#lower_table th',disableFilter);
   $(document).on('click','#compare',compareCat);
   $(document).on('click','.compareTable .comparedatahead th',sortCompareCat);
-
+  $(document).on('keypress','#searchBox',function(e) {
+    let code = (e.keyCode ? e.keyCode : e.which);
+    if (code == 13) {
+      $(this).blur();
+      TextSearch();
+    }
+  });
+  $(document).on('click','#searchBut',TextSearch);
 
   var rarity = ['基本','EX','稀有','激稀有','激稀有狂亂','超激稀有'] ;
   for(let i in rarity) $(".select_rarity").append("<span class='button' name='"+rarity[i]+"' value='0' >"+rarity[i]+"</span>") ;
@@ -344,6 +351,7 @@ $(document).ready(function () {
   function sortCompareCat() {
     let name = $(this).text();
     var arr = [] ;
+    let flag = true ;
     if(name == 'Picture' || name == '全名' ||name == '特性' || name =='範圍' || name == 'KB') return ;
     $(".comparedata").each(function () {
       let obj = {};
@@ -356,10 +364,10 @@ $(document).ready(function () {
     // console.log(name);
     console.log(arr);
     for(let i=0;i<arr.length;i++){
-
       for(let j=i+1;j<arr.length;j++){
         if(arr[j].item>arr[i].item){
           $(".compareTable").children('#'+arr[i].id).before( $(".compareTable").children('#'+arr[j].id));
+          flag = false ;
         }
         arr = [] ;
         $(".comparedata").each(function () {
@@ -372,8 +380,75 @@ $(document).ready(function () {
         });
       }
     }
+    if(flag){
+      for(let i=0;i<arr.length;i++){
+        for(let j=i+1;j<arr.length;j++){
+          if(arr[j].item<arr[i].item){
+            $(".compareTable").children('#'+arr[i].id).before( $(".compareTable").children('#'+arr[j].id));
+          }
+          arr = [] ;
+          $(".comparedata").each(function () {
+            let obj = {};
+            obj = {
+              id:$(this).attr('id'),
+              item:Number($(this).find("#"+name).text())
+            }
+            arr.push(obj);
+          });
+        }
+      }
+    }
+  }
+  function TextSearch() {
+    let keyword = $("#searchBox").val();
+    let buffer = [] ;
+    for(let id in catdata){
+      if(catdata[id].全名.indexOf(keyword) != -1) {
+        let simple = id.substring(0,3);
+        for(let j=1;j<4;j++){
+          let x = simple + '-' + j  ;
+          console.log(x);
+          if(catdata[x]) buffer.push(catdata[x]) ;
+        }
+
+      }
+    }
+
+    console.log(buffer);
+    scroll_to_div('selected');
+    $("#selected").empty();
+    $("#selected").scrollTop(0);
+    $("#selected").append(condenseCatName(buffer));
+    $(".button_group").css('display','flex');
   }
 
+  $('#test').click(function () {
+    html2canvas(document.body, {
+      onrendered: function(canvas) {
+        // document.body.appendChild(canvas);
+        var link=document.createElement("a");
+        link.href=canvas.toDataURL('image/jpg');   //function blocks CORS
+        link.download = 'screenshot.jpg';
+        link.click();
+      },
+    });
+    // let width = $('.compareTable').width(),
+    //     height = $('.compareTable').height() ;
+    // html2canvas($('.compareTable').get(), {
+    //     onrendered: function (canvas) {
+    //         var tempcanvas=document.createElement('canvas');
+    //         console.log(width+":"+height)
+    //         tempcanvas.width = width;
+    //         tempcanvas.height = height ;
+    //         var context=tempcanvas.getContext('2d');
+    //         context.drawImage(canvas,0,0);
+    //         var link=document.createElement("a");
+    //         link.href=tempcanvas.toDataURL('image/jpg');   //function blocks CORS
+    //         link.download = 'screenshot.jpg';
+    //         link.click();
+    //     }
+    // });
+  });
 
   $(".sortable").sortable({
     scroll:false,
