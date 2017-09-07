@@ -93,15 +93,15 @@ $(document).ready(function () {
         for(let i in change){
           let target = $('.compareTable #'+id).find('#'+change[i]) ;
           let original = target.attr('original');
-          target.html(levelToValue(original,rarity,level).toFixed(1))
+          target.html(levelToValue(original,rarity,level).toFixed(0))
                 .css('background-color',' rgba(242, 213, 167, 0.93)');
           setTimeout(function () {
             target.css('background-color','rgba(255, 255, 255, .9)');
           },500);
         }
         highlightTheBest();
+        $('.comparedatahead').find('th').css('border-left','0px solid');
       }
-
       else $(this).parent().html(lv_input_org);
     });
 
@@ -125,6 +125,7 @@ $(document).ready(function () {
       $(".compareTarget").children().remove();
       $(".button_group").hide();
       $("#lower_table tbody").hide();
+      $("#searchBox").val('');
     }
     $("."+className).find(".button").each(function () {
       $(this).attr('value','0');
@@ -238,6 +239,7 @@ $(document).ready(function () {
       for(let id in buffer_2) if(rFilter.indexOf(buffer_2[id].稀有度) != -1) buffer_3.push(buffer_2[id]) ;
     }
     else buffer_3 = buffer_2 ;
+    console.log(buffer_3) ;
 
     let tbody = $("#lower_table").children('tbody') ;
     if(tbody.css('display') != 'none'){
@@ -246,10 +248,12 @@ $(document).ready(function () {
         let name = $(this).children('th').attr('name') ;
         let limit = Number($(this).children(".value_display").text()) ;
         let lv_bind = $(this).children('th').attr('lv-bind')=='true' ? true : false ;
+        let lv = Number($("#level").slider( "option", "value" )) ;
+
         if(!disabled){
           buffer_1 = [] ;
           for(let id in buffer_3){
-            let value = lv_bind ? levelToValue(buffer_3[id][name],buffer_3[id].稀有度) : buffer_3[id][name] ;
+            let value = lv_bind ? levelToValue(buffer_3[id][name],buffer_3[id].稀有度,lv) : buffer_3[id][name] ;
             if(value > limit) buffer_1.push(buffer_3[id]) ;
           }
           buffer_3 = [] ;
@@ -395,6 +399,9 @@ $(document).ready(function () {
     var arr = [] ;
     let flag = true ;
     if(name == 'Picture' || name == '全名' ||name == '特性' || name =='範圍' || name == 'KB') return ;
+    $(this).css('border-left','5px solid rgb(246, 132, 59)')
+            .parent().siblings().children().css('border-left','0px solid');
+
     $(".comparedata").each(function () {
       let obj = {};
       obj = {
@@ -423,6 +430,9 @@ $(document).ready(function () {
       }
     }
     if(flag){
+      $(this).css('border-left','5px solid rgb(59, 184, 246)')
+              .parent().siblings().children().css('border-left','0px solid');
+
       for(let i=0;i<arr.length;i++){
         for(let j=i+1;j<arr.length;j++){
           if(arr[j].item<arr[i].item){
@@ -581,6 +591,9 @@ $(document).ready(function () {
     if(x<x1||x>x2||y<y1||y>y2) if(ui.sender.is('.compareTarget')) ui.item.remove();
 
   });
+  $('.compareTable').on('sort',function (e,ui) {
+    $('.comparedatahead').find('th').css('border-left','0px solid');
+  });
 
   function scroll_to_div(div_id){
     $('html,body').animate(
@@ -611,7 +624,7 @@ $(document).ready(function () {
   function turnPage(n) {
     let current = $("#selected").scrollTop();
     $("#selected").animate(
-      {scrollTop: current+347.88*n},
+      {scrollTop: current+348*n},
       100,'easeInOutCubic');
   }
   function levelChange(n) {
@@ -657,7 +670,7 @@ $(document).ready(function () {
   };
   xmlhttp.open("GET", url, true);
   xmlhttp.send();
-  // xmlhttp.open("GET", url2, true);
-  // xmlhttp.send();
+  xmlhttp.open("GET", url2, true);
+  xmlhttp.send();
 
 });
