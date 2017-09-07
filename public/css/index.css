@@ -26,8 +26,10 @@ body,html{
 }
 .search input{
   height: 30px;
-  width: 200px;
+  width: 250px;
   padding: 10px;
+  border: 0;
+  border-radius: 5px;
 }
 button,.button,.selected_cat{
   background-color: rgb(227, 158, 73) ;
@@ -124,6 +126,7 @@ td, th {
   margin: 2px 0 ;
   padding: 8px;
   text-align: center;
+  transition: .3s ease-in-out
 }
 .select th{
   cursor: pointer;

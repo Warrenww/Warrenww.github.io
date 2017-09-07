@@ -69,6 +69,42 @@ $(document).ready(function () {
     }
   });
   $(document).on('click','#searchBut',TextSearch);
+  var lv_input_org ;
+  $(document).on('click','.comparedata #level',function () {
+      lv_input_org = $(this).text();
+      $(this).html('<input type="text" value="' +lv_input_org+ '"></input>');
+      $(this).find('input').select();
+
+  });
+  $(document).on('keypress', '.comparedata #level input', function(e) {
+      let code = (e.keyCode ? e.keyCode : e.which);
+      if (code == 13) {
+        $(this).blur();
+      }
+  });
+  $(document).on('blur', '.comparedata #level input', function() {
+      let level = Number($(this).val());
+      let rarity = $(this).parent().attr('rarity');
+      let id = $(this).parents('.comparedata').attr('id');
+
+      if (level && level < 101 && level > 0) {
+        $(this).parent().html(level);
+        let change = ['體力','硬度','攻擊力','DPS'] ;
+        for(let i in change){
+          let target = $('.compareTable #'+id).find('#'+change[i]) ;
+          let original = target.attr('original');
+          target.html(levelToValue(original,rarity,level).toFixed(1))
+                .css('background-color',' rgba(242, 213, 167, 0.93)');
+          setTimeout(function () {
+            target.css('background-color','rgba(255, 255, 255, .9)');
+          },500);
+        }
+        highlightTheBest();
+      }
+
+      else $(this).parent().html(lv_input_org);
+    });
+
 
   var rarity = ['基本','EX','稀有','激稀有','激稀有狂亂','超激稀有'] ;
   for(let i in rarity) $(".select_rarity").append("<span class='button' name='"+rarity[i]+"' value='0' >"+rarity[i]+"</span>") ;
@@ -125,6 +161,8 @@ $(document).ready(function () {
   }
   function displayCatData(id) {
     let data = catdata[id] ;
+    let lv = Number($("#level").slider( "option", "value" )) ;
+
     $(".dataTable").empty();
     $('.compareTable').empty();
     $(".dataTable").append(
@@ -132,12 +170,12 @@ $(document).ready(function () {
       "<th style='height:80px;padding:0'><img src=\"http://imgs-server.com/battlecats/u"+id+".png\"style='height:100%'></th>"+
       "<th colspan='5'>"+data.全名+"</th>"+
       "</tr><tr>"+
-      "<th>體力</th><td>"+levelToValue(data.lv1體力,data.稀有度).toFixed(0)+"</td>"+
+      "<th>體力</th><td>"+levelToValue(data.lv1體力,data.稀有度,lv).toFixed(0)+"</td>"+
       "<th>KB</th><td>"+data.kb+"</td>"+
-      "<th>硬度</th><td>"+levelToValue(data.lv1硬度,data.稀有度).toFixed(0)+"</td>"+
+      "<th>硬度</th><td>"+levelToValue(data.lv1硬度,data.稀有度,lv).toFixed(0)+"</td>"+
       "</tr><tr>"+
-      "<th>攻擊力</th><td>"+levelToValue(data.lv1攻擊,data.稀有度).toFixed(0)+"</td>"+
-      "<th>DPS</th><td>"+levelToValue(data.lv1dps,data.稀有度).toFixed(0)+"</td>"+
+      "<th>攻擊力</th><td>"+levelToValue(data.lv1攻擊,data.稀有度,lv).toFixed(0)+"</td>"+
+      "<th>DPS</th><td>"+levelToValue(data.lv1dps,data.稀有度,lv).toFixed(0)+"</td>"+
       "<th>射程</th><td>"+data.射程+"</td>"+
       "</tr><tr>"+
       "<th>攻頻</th><td>"+data.攻頻.toFixed(1)+" s</td>"+
@@ -240,7 +278,9 @@ $(document).ready(function () {
         "<div style='flex:1' class='comparedatahead'>"+
         "<table>"+
         "<tr>"+
-        "<th style='height:80px;''>Picture</th>"+
+        "<th>Level</th>"+
+        "</tr><tr>"+
+        "<th style='height:80px;'>Picture</th>"+
         "</tr><tr>"+
         "<th>全名</th>"+
         "</tr><tr>"+
@@ -278,19 +318,21 @@ $(document).ready(function () {
           "<div style='flex:1' class='comparedata' id='"+data.id+"'>"+
           "<table>"+
           "<tr>"+
+          "<th id='level' rarity='"+data.稀有度+"'>30</th>"+
+          "</tr><tr>"+
           "<th style='height:80px;padding:0'><img src=\"http://imgs-server.com/battlecats/u"+compare[i]+".png\"style='height:100%'></th>"+
           "</tr><tr>"+
           "<th id='全名'>"+data.全名+"</th>"+
           "</tr><tr>"+
-          "<td id='體力'>"+levelToValue(data.lv1體力,data.稀有度).toFixed(0)+"</td>"+
+          "<td id='體力' original='"+data.lv1體力+"'>"+levelToValue(data.lv1體力,data.稀有度,30).toFixed(0)+"</td>"+
           "</tr><tr>"+
           "<td id='KB'>"+data.kb+"</td>"+
           "</tr><tr>"+
-          "<td id='硬度'>"+levelToValue(data.lv1硬度,data.稀有度).toFixed(0)+"</td>"+
+          "<td id='硬度' original='"+data.lv1硬度+"'>"+levelToValue(data.lv1硬度,data.稀有度,30).toFixed(0)+"</td>"+
           "</tr><tr>"+
-          "<td id='攻擊力'>"+levelToValue(data.lv1攻擊,data.稀有度).toFixed(0)+"</td>"+
+          "<td id='攻擊力' original='"+data.lv1攻擊+"'>"+levelToValue(data.lv1攻擊,data.稀有度,30).toFixed(0)+"</td>"+
           "</tr><tr>"+
-          "<td id='DPS'>"+levelToValue(data.lv1dps,data.稀有度).toFixed(0)+"</td>"+
+          "<td id='DPS' original='"+data.lv1dps+"'>"+levelToValue(data.lv1dps,data.稀有度,30).toFixed(0)+"</td>"+
           "</tr><tr>"+
           "<td id='射程'>"+data.射程+"</td>"+
           "</tr><tr>"+
@@ -316,7 +358,7 @@ $(document).ready(function () {
   function highlightTheBest() {
     $('.comparedatahead tbody').children().each(function () {
       let name = $(this).text();
-      if(name == 'Picture' || name == '全名' ||name == '特性' || name == 'KB') return ;
+      if(name == 'Picture' || name == '全名' ||name == '特性' || name == 'KB' || name == 'Level') return ;
       // console.log(name);
       if(name == '範圍'){
         $(".comparedata").each(function () {
@@ -422,6 +464,7 @@ $(document).ready(function () {
     $(".button_group").css('display','flex');
   }
 
+
   $('#test').click(function () {
     html2canvas(document.body, {
       onrendered: function(canvas) {
@@ -512,7 +555,7 @@ $(document).ready(function () {
     compare = $('.compareTarget').sortable('toArray',{attribute:'value'});
     if(compare.indexOf(input.attr('value')) != -1){
       let repeat = $(this).find('[value='+input.attr('value')+']') ;
-      repeat.css('border-color','rgb(219, 87, 87)');
+      repeat.css('border-color','rgb(237, 179, 66)');
       setTimeout(function () {
         repeat.css('border-color','white');
       },1000);
@@ -576,8 +619,7 @@ $(document).ready(function () {
     if(original == 1 || original == 100) return ;
     $("#level").slider( "option", "value" ,original+n);
   }
-  function levelToValue(origin,rarity) {
-    let lv = Number($("#level").slider( "option", "value" )) ;
+  function levelToValue(origin,rarity,lv) {
     let limit,result ;
     switch (rarity) {
       case '稀有':
@@ -590,6 +632,14 @@ $(document).ready(function () {
       limit = 60 ;
     }
     return lv<limit ? (0.8+0.2*lv)*origin : origin*(0.8+0.2*limit)+origin*0.1*(lv-limit) ;
+  }
+  function sleep(milliseconds) {
+    var start = new Date().getTime();
+    while (true) {
+      if ((new Date().getTime() - start) > milliseconds){
+        break;
+      }
+    }
   }
 
   var xmlhttp = new XMLHttpRequest();
