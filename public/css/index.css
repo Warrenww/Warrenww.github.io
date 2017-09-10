@@ -230,7 +230,6 @@ table {
   border: 3px solid;
 }
 .tbody_togger th{width: 100%;}
-#lower_table tbody th{width: 30%}
 .compareSorce{
   display: flex;
   width: 80%;
@@ -258,6 +257,35 @@ table {
   color:rgb(247, 175, 67);
   font-weight: bolder;
 }
+.filter_option{
+  width: 100px
+}
+.filter_option[active~='false']{
+  background-color: rgba(129, 115, 92,.93);
+  color: lightgray
+}
+#slider_holder{
+  height: 30px;
+  display: none;
+}
+.active,.reverse{
+  cursor: pointer;
+}
+/*.best::after{
+  font-family: Glyphicons Halflings;
+    content: " \e125";
+    position: absolute;
+    margin: -7px -46px;
+    font-size: 25px;
+    transform: rotate(-15deg);
+    border: 5px solid;
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}*/
 @media screen and (max-width: 768px) {
   #search{
     font-size: 1.2em;

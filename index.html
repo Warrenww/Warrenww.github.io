@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="css/index.css" />
     <link rel="stylesheet" href="public/css/index.css" />
   </head>
@@ -59,13 +60,34 @@
 
         </table>
         <table id="lower_table">
-          <thead class="tbody_togger">
-            <th colspan="6">
-              更多篩選器
-            </th>
-          </thead>
-          <tbody class="sortable" hidden>
+          <tbody>
             <tr>
+              <th rowspan="2" id="selectAll">
+                全選
+              </th>
+              <th colspan="8">
+                更多篩選器
+              </th>
+            </tr>
+            <tr>
+              <th class="filter_option" id="體力" lv-bind="true" value="10000" reverse="false" range="[1000,100000]" step="1000" active="false">體力</th>
+              <th class="filter_option" id="lv1dps" lv-bind="true" value="3000" reverse="false" range="[100,10000]" step="100" active="false">DPS</th>
+              <th class="filter_option" id="速度" lv-bind="false" value="10" reverse="false" range="[1,100]" step="1" active="false">速度</th>
+              <th class="filter_option" id="花費" lv-bind="false" value="1000" reverse="false" range="[0,5000]" step="10" active="false">花費</th>
+              <th class="filter_option" id="攻頻" lv-bind="false" value="5" reverse="false" range="[0,20]" step="0.5" active="false">攻頻</th>
+              <th class="filter_option" id="lv1攻擊" lv-bind="true" value="10000" reverse="false" range="[1000,100000]" step="1000" active="false">攻撃力</th>
+              <th class="filter_option" id="射程" lv-bind="false" value="300" reverse="false" range="[10,1000]" step="10" active="false">射程</th>
+              <th class="filter_option" id="再生産" lv-bind="false" value="5" reverse="false" range="[2,300]" step="10" active="false">再生産</th>
+            </tr>
+            <tr id="slider_holder">
+              <td class="active"></td>
+              <td colspan="6">
+                <div class="slider"></div>
+              </td>
+              <td class="value_display"></td>
+              <td class="reverse"></td>
+            </tr>
+            <!-- <tr>
               <th colspan="2" style="height:50px" value='0' name='lv1體力' lv-bind=true>體力下限</th>
               <td style="width:500px" colspan="2">
                 <div id="select_hp" class='slider'></div>
@@ -100,7 +122,7 @@
               <td colspan="1" class="value_display">
                 30000
               </td>
-            </tr>
+            </tr> -->
           </tbody>
         </table>
 

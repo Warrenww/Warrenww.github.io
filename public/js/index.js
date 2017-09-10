@@ -4,6 +4,9 @@ $(document).ready(function () {
   var catdata ;
   var timer = new Date().getTime();
   var compare = [] ;
+  var filter_name = '' ;
+
+  console.log(window.location);
 
   // $(document).on('click','#updateCatData',function () {socket.emit('force_update_cat_data');});
   $(document).on('click','#start',function () {
@@ -55,10 +58,6 @@ $(document).ready(function () {
     else slider.slider('option','value',val);
 
   });
-  $(document).on('click','.tbody_togger',function () {
-    $(this).parent().children('tbody').toggle(300,'easeInOutCubic');
-  }) ;
-  $(document).on('click','#lower_table th',disableFilter);
   $(document).on('click','#compare',compareCat);
   $(document).on('click','.compareTable .comparedatahead th',sortCompareCat);
   $(document).on('keypress','#searchBox',function(e) {
@@ -74,7 +73,9 @@ $(document).ready(function () {
       lv_input_org = $(this).text();
       $(this).html('<input type="text" value="' +lv_input_org+ '"></input>');
       $(this).find('input').select();
-
+  });
+  $(document).on('click', '.comparedata #level input',function (e) {
+    e.stopPropagation();
   });
   $(document).on('keypress', '.comparedata #level input', function(e) {
       let code = (e.keyCode ? e.keyCode : e.which);
@@ -82,29 +83,8 @@ $(document).ready(function () {
         $(this).blur();
       }
   });
-  $(document).on('blur', '.comparedata #level input', function() {
-      let level = Number($(this).val());
-      let rarity = $(this).parent().attr('rarity');
-      let id = $(this).parents('.comparedata').attr('id');
-
-      if (level && level < 101 && level > 0) {
-        $(this).parent().html(level);
-        let change = ['體力','硬度','攻擊力','DPS'] ;
-        for(let i in change){
-          let target = $('.compareTable #'+id).find('#'+change[i]) ;
-          let original = target.attr('original');
-          target.html(levelToValue(original,rarity,level).toFixed(0))
-                .css('background-color',' rgba(242, 213, 167, 0.93)');
-          setTimeout(function () {
-            target.css('background-color','rgba(255, 255, 255, .9)');
-          },500);
-        }
-        highlightTheBest();
-        $('.comparedatahead').find('th').css('border-left','0px solid');
-      }
-      else $(this).parent().html(lv_input_org);
-    });
-
+  $(document).on('blur', '.comparedata #level input', changeCompareLevel);
+  $(document).on('click','.filter_option',filterSlider);
 
   var rarity = ['基本','EX','稀有','激稀有','激稀有狂亂','超激稀有'] ;
   for(let i in rarity) $(".select_rarity").append("<span class='button' name='"+rarity[i]+"' value='0' >"+rarity[i]+"</span>") ;
@@ -191,14 +171,6 @@ $(document).ready(function () {
     );
     scroll_to_class('display',0) ;
   }
-  function disableFilter() {
-    let val = Number($(this).attr('value'));
-    val = (val+1) %2 ;
-    $(this).attr('value',val);
-    let slider = $(this).parent().children('td').eq(0).children().slider('widget');
-    if(slider.slider('option','disabled')) slider.slider('option','disabled',false);
-    else slider.slider('option','disabled',true);
-  }
   function search() {
     let rarity = $(".select_rarity [value=1]"),
     color = $(".select_color [value=1]"),
@@ -241,26 +213,22 @@ $(document).ready(function () {
     else buffer_3 = buffer_2 ;
     console.log(buffer_3) ;
 
-    let tbody = $("#lower_table").children('tbody') ;
-    if(tbody.css('display') != 'none'){
-      tbody.children().each(function () {
-        let disabled = Number($(this).children('th').attr('value'));
-        let name = $(this).children('th').attr('name') ;
-        let limit = Number($(this).children(".value_display").text()) ;
-        let lv_bind = $(this).children('th').attr('lv-bind')=='true' ? true : false ;
-        let lv = Number($("#level").slider( "option", "value" )) ;
-
-        if(!disabled){
-          buffer_1 = [] ;
-          for(let id in buffer_3){
-            let value = lv_bind ? levelToValue(buffer_3[id][name],buffer_3[id].稀有度,lv) : buffer_3[id][name] ;
-            if(value > limit) buffer_1.push(buffer_3[id]) ;
-          }
-          buffer_3 = [] ;
-          buffer_3 = buffer_1 ;
-        }
-      });
-    }
+    $(".filter_option[active='true']").each(function () {
+      let name = $(this).attr('id'),
+          reverse = $(this).attr('reverse') == 'true' ? true : false ,
+          limit = $(this).attr('value') ,
+          level_bind = $(this).attr('lv-bind') == 'true' ? true : false ,
+          lv = Number($("#level").slider( "option", "value" )) ;
+      buffer_1 = [];
+      buffer_1 = buffer_3;
+      buffer_3 = [];
+      for(let id in buffer_1){
+        let value = level_bind ? levelToValue(buffer_1[id][name],buffer_1[id].稀有度,lv) : buffer_1[id][name];
+        console.log(value+":"+limit+"("+reverse+")");
+        if(value > limit && !reverse) buffer_3.push(buffer_1[id]);
+        else if (value < limit && reverse) buffer_3.push(buffer_1[id]);
+      }
+    });
 
     console.log(buffer_3) ;
     scroll_to_div('selected');
@@ -360,6 +328,7 @@ $(document).ready(function () {
     highlightTheBest();
   }
   function highlightTheBest() {
+    $('.comparedata').find('td').removeClass('best');
     $('.comparedatahead tbody').children().each(function () {
       let name = $(this).text();
       if(name == 'Picture' || name == '全名' ||name == '特性' || name == 'KB' || name == 'Level') return ;
@@ -371,8 +340,10 @@ $(document).ready(function () {
         return ;
       }
       let arr = [];
-      let max = {id:'',item: -1},
-          min = {id:'',item: 1e10};
+      let max = [],
+          min = [];
+      let max_val = -1,
+          min_val = 1e10 ;
 
       $(".comparedata").each(function () {
         let obj = {};
@@ -384,13 +355,23 @@ $(document).ready(function () {
       });
       // console.log(arr);
       for(let i in arr) {
-        if(arr[i].item > max.item) max = arr[i];
-        if(arr[i].item < min.item) min = arr[i];
+        if(arr[i].item > max_val) {
+          max_val = arr[i].item ;
+          max = [arr[i]];
+        }
+        if(arr[i].item < min_val) {
+          min_val = arr[i].item ;
+          min = [arr[i]];
+        }
+        if(arr[i].item == max_val) max.push(arr[i]) ;
+        if(arr[i].item == min_val) min.push(arr[i]) ;
       }
       // console.log(max);
       // console.log(min);
-      if(name == '再生産' || name == '攻頻' || name == '花費') $(".compareTable").children("#"+min.id).find("#"+name).attr('class','best');
-      else $(".compareTable").children("#"+max.id).find("#"+name).attr('class','best');
+      if(name == '再生産' || name == '攻頻' || name == '花費') {
+        for(let i in min) $(".compareTable").children("#"+min[i].id).find("#"+name).attr('class','best');
+      }
+      else for(let i in max) $(".compareTable").children("#"+max[i].id).find("#"+name).attr('class','best');
       // $(".compareTable").children("#"+min.id).find("#"+name).css('color','rgb(82, 174, 219)');
     });
   }
@@ -473,10 +454,75 @@ $(document).ready(function () {
     $("#selected").append(condenseCatName(buffer));
     $(".button_group").css('display','flex');
   }
+  function changeCompareLevel() {
+      let level = Number($(this).val());
+      let rarity = $(this).parent().attr('rarity');
+      let id = $(this).parents('.comparedata').attr('id');
 
+      if (level && level < 101 && level > 0) {
+        $(this).parent().html(level);
+        let change = ['體力','硬度','攻擊力','DPS'] ;
+        for(let i in change){
+          let target = $('.compareTable #'+id).find('#'+change[i]) ;
+          let original = target.attr('original');
+          target.html(levelToValue(original,rarity,level).toFixed(0))
+                .css('background-color',' rgba(242, 213, 167, 0.93)');
+          setTimeout(function () {
+            target.css('background-color','rgba(255, 255, 255, .9)');
+          },500);
+        }
+        highlightTheBest();
+        $('.comparedatahead').find('th').css('border-left','0px solid');
+      }
+      else $(this).parent().html(lv_input_org);
+  }
+  function filterSlider() {
+    $("#slider_holder").show();
+    $(this).css('border','5px solid rgb(232, 146, 44)').siblings().css('border','none');
+    filter_name = $(this).attr('id') ;
+    let value = Number($(this).attr('value')) ;
+    let reverse = $(this).attr('reverse') ;
+    let range = JSON.parse($(this).attr('range'));
+    let step = Number($(this).attr('step')) ;
+    let active = $(this).attr('active') ;
+
+    $("#slider_holder").find('.slider').slider('option',{
+      'min': range[0],
+      'max': range[1],
+      'step': step,
+      'value': value
+    }).parent().siblings('.active').html(active=='true'?'<i class="material-icons">&#xe837;</i>':'<i class="material-icons">&#xe836;</i>')
+    .siblings('.reverse').html(reverse=='true'?'上限':'下限');
+  }
+  $('#slider_holder').children('.active').click(function () {
+    let target = $("#"+filter_name+".filter_option");
+    target.attr('active',target.attr('active')=='true'?'false':'true');
+    $(this).html(target.attr('active')=='true'?'<i class="material-icons">&#xe837;</i>':'<i class="material-icons">&#xe836;</i>');
+  });
+  $('#slider_holder').children('.reverse').click(function () {
+    let target = $("#"+filter_name+".filter_option");
+    target.attr('reverse',target.attr('reverse')=='true'?'false':'true');
+    $(this).html(target.attr('reverse')=='true'?'下限':'上限');
+  });
+  $('#slider_holder').find('.slider').on("slidechange",function (e,ui) {
+    $("#lower_table").find("#"+filter_name).attr('value',ui.value);
+  });
+  $("#lower_table").find("#selectAll").click(function () {
+    if($(this).text() == '全選') {
+      $(".filter_option").attr('active','true');
+      $(this).text('全部清除');
+      $('.active').html('<i class="material-icons">&#xe837;</i>');
+    }
+    else{
+      $(".filter_option").attr('active','false');
+      $(this).text('全選');
+      $('.active').html('<i class="material-icons">&#xe836;</i>');
+      $("#slider_holder").hide();
+    }
+  });
 
   $('#test').click(function () {
-    html2canvas(document.body, {
+    html2canvas($('.compareTable').get(), {
       onrendered: function(canvas) {
         // document.body.appendChild(canvas);
         var link=document.createElement("a");
@@ -522,30 +568,6 @@ $(document).ready(function () {
   $('.compareTarget').sortable('option',{
     item: '> comparedata'
   });
-  $("#select_hp").slider('option',{
-    'max':200000,
-    'min':1000,
-    'step':1000,
-    'value':30000
-  });
-  $("#select_kb").slider('option',{
-    'max':7,
-    'min':1,
-    'value':3
-  });
-  $("#select_distance").slider('option',{
-    'max':1000,
-    'min':0,
-    'value':300,
-    'step':10
-  });
-  $("#select_atk").slider('option',{
-    'max':200000,
-    'min':1000,
-    'step':1000,
-    'value':30000
-  });
-
   $("#level").on("slide", function(e,ui) {
     $("#level_num").text(ui.value);
   });
@@ -656,8 +678,7 @@ $(document).ready(function () {
   }
 
   var xmlhttp = new XMLHttpRequest();
-  var url = "public/js/Catdata.txt";
-  var url2 = "js/Catdata.txt" ;
+  var url = window.location.hostname == 'localhost' ? "js/Catdata.txt" : "public/js/Catdata.txt";
 
   xmlhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -670,7 +691,6 @@ $(document).ready(function () {
   };
   xmlhttp.open("GET", url, true);
   xmlhttp.send();
-  // xmlhttp.open("GET", url2, true);
-  // xmlhttp.send();
+
 
 });
