@@ -478,7 +478,7 @@ $(document).ready(function () {
   }
   function filterSlider() {
     $("#slider_holder").show();
-    $(this).css('border','5px solid rgb(232, 146, 44)').siblings().css('border','none');
+    $(this).css('border-bottom','5px solid rgb(241, 166, 67)').siblings().css('border-bottom','0px solid');
     filter_name = $(this).attr('id') ;
     let value = Number($(this).attr('value')) ;
     let reverse = $(this).attr('reverse') ;
@@ -492,7 +492,7 @@ $(document).ready(function () {
       'step': step,
       'value': value
     }).parent().siblings('.active').html(active=='true'?'<i class="material-icons">&#xe837;</i>':'<i class="material-icons">&#xe836;</i>')
-    .siblings('.reverse').html(reverse=='true'?'上限':'下限');
+    .siblings('.reverse').html(reverse=='true'?'以下':'以上');
   }
   $('#slider_holder').children('.active').click(function () {
     let target = $("#"+filter_name+".filter_option");
@@ -502,13 +502,13 @@ $(document).ready(function () {
   $('#slider_holder').children('.reverse').click(function () {
     let target = $("#"+filter_name+".filter_option");
     target.attr('reverse',target.attr('reverse')=='true'?'false':'true');
-    $(this).html(target.attr('reverse')=='true'?'下限':'上限');
+    $(this).html(target.attr('reverse')=='true'?'以下':'以上');
   });
   $('#slider_holder').find('.slider').on("slidechange",function (e,ui) {
     $("#lower_table").find("#"+filter_name).attr('value',ui.value);
   });
   $("#lower_table").find("#selectAll").click(function () {
-    if($(this).text() == '全選') {
+    if($(this).text().trim() == '全選') {
       $(".filter_option").attr('active','true');
       $(this).text('全部清除');
       $('.active').html('<i class="material-icons">&#xe837;</i>');
@@ -517,9 +517,28 @@ $(document).ready(function () {
       $(".filter_option").attr('active','false');
       $(this).text('全選');
       $('.active').html('<i class="material-icons">&#xe836;</i>');
-      $("#slider_holder").hide();
+      $("#slider_holder").hide().siblings().children('.filter_option').css('border-bottom','0px solid');
     }
   });
+  $(".filter_option").hover(
+    function () {
+      let position = $(this).offset(),
+          value = $(this).attr('value'),
+          width = $(this).outerWidth()-10,
+          active = $(this).attr('active') == 'true' ? true : false ,
+          reverse = $(this).attr('active') == 'true' ? '以下' : '以上';
+
+      // alert(JSON.stringify(position));
+      position.top -= 30 ;
+        if(active){
+          $("#TOOLTIP").finish().fadeIn();
+          $("#TOOLTIP").offset(position).width(width).text(value+reverse) ;
+        }
+
+    },function () {
+      $("#TOOLTIP").fadeOut();
+  });
+
 
   $('#test').click(function () {
     html2canvas($('.compareTable').get(), {

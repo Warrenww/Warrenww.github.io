@@ -267,9 +267,33 @@ table {
 #slider_holder{
   height: 30px;
   display: none;
+  transition: .3s ease-in-out
 }
 .active,.reverse{
   cursor: pointer;
+}
+#TOOLTIP{
+  position: fixed;
+  display: flex;
+  background-color: rgba(60, 44, 6, 0.9);
+  padding: 5px;
+  /*border-radius: 6px;*/
+  justify-content: center;
+  z-index: 99 ;
+  color: white
+}
+#TOOLTIP::after{
+  position: relative;
+  top: 25px;
+  right: 50px;
+  content: " " ;
+  height: 20px;
+  width: 20px;
+  border: 10px solid rgba(60, 44, 6, 0.9);
+  border-left-color:transparent;
+  border-right-color:transparent;
+  border-bottom-color:transparent;
+
 }
 /*.best::after{
   font-family: Glyphicons Halflings;
