@@ -197,8 +197,10 @@ $(document).ready(function () {
           target.css('background-color','rgba(255, 255, 255, .9)');
         },500);
       }
-      let target = $('.dataTable').find('#特性');
-      target.html(serialATK(data.特性,levelToValue(data.lv1攻擊,data.稀有度,level)));
+      if(data.特性.indexOf("連續攻擊") != -1){
+        let target = $('.dataTable').find('#特性');
+        target.html(serialATK(data.特性,levelToValue(data.lv1攻擊,data.稀有度,level)));
+      }
     }
   }
   function search() {
@@ -511,7 +513,7 @@ $(document).ready(function () {
         let target = $('.compareTable #'+id).find('#特性'),
             original = target.attr('original'),
             atk = target.attr('atk');
-        target.html(serialATK(original,levelToValue(atk,rarity,level)))
+        if(original.indexOf("連續攻擊") != -1) target.html(serialATK(original,levelToValue(atk,rarity,level)))
         highlightTheBest();
         $('.comparedatahead').find('th').css('border-left','0px solid');
       }
@@ -733,10 +735,11 @@ $(document).ready(function () {
   }
   function serialATK(prop,atk) {
       let b = prop.split("（")[0];
-      let arr = prop.split("（")[1].split("）")[0].split(",") ;
+      let arr = prop.split("（")[1].split("）")[0].split(","),
+          c = prop.split("（")[1].split("）")[1];
       // console.log(b+"("+d.join()+")")
       for(let i in arr) arr[i] = (atk*Number(arr[i])).toFixed(0) ;
-      return b+"（"+arr.join(' ')+"）" ;
+      return b+"（"+arr.join(' ')+"）"+c ;
 
   }
   function sleep(milliseconds) {
