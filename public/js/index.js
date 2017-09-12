@@ -57,6 +57,11 @@ $(document).ready(function () {
       $(this).find('input').select();
   });
   $(document).on('blur','.value_display input',changeSlider) ;
+  $(document).on('blur','#level_num input',function () {
+    let val = Number($(this).val()) ;
+    val = val && val>0 && val<101 ? val : filter_org ;
+    $('#level').slider('option','value',val);
+  });
 
   var rarity = ['基本','EX','稀有','激稀有','激稀有狂亂','超激稀有'] ;
   for(let i in rarity) $(".select_rarity").append("<span class='button' name='"+rarity[i]+"' value='0' >"+rarity[i]+"</span>") ;
@@ -572,10 +577,10 @@ $(document).ready(function () {
     item: '> comparedata'
   });
   $("#level").on("slide", function(e,ui) {
-    $("#level_num").text(ui.value);
+    $("#level_num").html(ui.value);
   });
   $("#level").on("slidechange", function(e,ui) {
-    $("#level_num").text(ui.value);
+    $("#level_num").html(ui.value);
   });
   $(".slider").on("slide", function(e,ui) {
     $(this).parent().siblings('td.value_display').html(ui.value);
