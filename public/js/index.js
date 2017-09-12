@@ -525,7 +525,7 @@ $(document).ready(function () {
 
 
   $('#test').click(function () {
-    html2canvas($('.compareTable').get(), {
+    html2canvas($('.display').get(), {
       onrendered: function(canvas) {
         // document.body.appendChild(canvas);
         var link=document.createElement("a");
