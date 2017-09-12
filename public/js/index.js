@@ -1,16 +1,15 @@
 
 $(document).ready(function () {
-  // var socket = io();
   var catdata ;
   var timer = new Date().getTime();
   var compare = [] ;
   var filter_name = '' ;
-
+  console.log(window)
   if(screen.width < 768){
     $("#lower_table .value_display").attr("colspan",7);
   }
 
-  // $(document).on('click','#updateCatData',function () {socket.emit('force_update_cat_data');});
+  $(document).on('click','#updateCatData',function () {io().emit('force_update_cat_data');});
   $(document).on('keypress', 'input', function(e) {
     let code = (e.keyCode ? e.keyCode : e.which);
     if (code == 13) {
@@ -30,8 +29,6 @@ $(document).ready(function () {
   $(document).on('click','#next_sel_pg',function () {turnPage(1);}) ;
   $(document).on('click','#pre_sel_pg',function () {turnPage(-1);}) ;
   $(document).on('click','.card',function () {displayCatData($(this).attr('value'));});
-  $(document).on('click','#lv_minus',function () {levelChange(-1)});
-  $(document).on('click','#lv_plus',function () {levelChange(1)});
   $(document).on('click',"#clear_all",function () {clearSelected('select');});
   $(document).on('click','#upper_table th',function () {
     let className = $(this).siblings('td').attr('class') ;
@@ -119,16 +116,15 @@ $(document).ready(function () {
   }
   function displayCatData(id) {
     let data = catdata[id] ;
-    let lv = Number($("#level").slider( "option", "value" )) ;
     let html = "" ;
 
     html += screen.width > 400 ? "<tr>"+
     "<th style='height:80px;padding:0'><img src=\"http://imgs-server.com/battlecats/u"+id+".png\"style='height:100%'></th>"+
-    "<th colspan='5'>"+data.全名+"</th>"+
+    "<th colspan='5' rarity='"+data.稀有度+"' id='全名'>"+data.全名+"</th>"+
     "</tr>" : "<tr>"+
     "<th colspan='6' style='height:80px;padding:0;background-color:transparent'><img src=\"http://imgs-server.com/battlecats/u"+id+".png\"style='height:100%'></th>"+
     "</tr><tr>"+
-    "<th colspan='6'>"+data.全名+"</th>"+
+    "<th colspan='6' rarity='"+data.稀有度+"' id='全名'>"+data.全名+"</th>"+
     "</tr>" ;
 
 
@@ -137,25 +133,73 @@ $(document).ready(function () {
     $(".dataTable").append(
       html+
       "<tr>"+
-      "<th>體力</th><td>"+levelToValue(data.lv1體力,data.稀有度,lv).toFixed(0)+"</td>"+
-      "<th>KB</th><td>"+data.kb+"</td>"+
-      "<th>硬度</th><td>"+levelToValue(data.lv1硬度,data.稀有度,lv).toFixed(0)+"</td>"+
+      "<th colspan='1'>等級</th>"+
+      "<td colspan='4' class='level'>"+
+      "<div id='level' class='slider'></div>"+
+      "</td>"+
+      "<td colspan='"+(screen.width < 768 ? 5 : 1)+"' >"+
+      "<span id='level_num'>30</span>"+
+      "</td >"+
+      "<tr>"+
+      "<th>體力</th><td id='體力' original='"+data.lv1體力+"'>"+
+      levelToValue(data.lv1體力,data.稀有度,30).toFixed(0)+"</td>"+
+      "<th>KB</th><td id='KB'>"+data.kb+"</td>"+
+      "<th>硬度</th><td id='硬度' original='"+data.lv1硬度+"'>"+
+      levelToValue(data.lv1硬度,data.稀有度,30).toFixed(0)+"</td>"+
       "</tr><tr>"+
-      "<th>攻擊力</th><td>"+levelToValue(data.lv1攻擊,data.稀有度,lv).toFixed(0)+"</td>"+
-      "<th>DPS</th><td>"+levelToValue(data.lv1dps,data.稀有度,lv).toFixed(0)+"</td>"+
-      "<th>射程</th><td>"+data.射程+"</td>"+
+      "<th>攻擊力</th><td id='攻擊力' original='"+data.lv1攻擊+"'>"+
+      levelToValue(data.lv1攻擊,data.稀有度,30).toFixed(0)+"</td>"+
+      "<th>DPS</th><td id='DPS' original='"+data.lv1dps+"'>"+
+      levelToValue(data.lv1dps,data.稀有度,30).toFixed(0)+"</td>"+
+      "<th>射程</th><td id='射程'>"+data.射程+"</td>"+
       "</tr><tr>"+
-      "<th>攻頻</th><td>"+data.攻頻.toFixed(1)+" s</td>"+
-      "<th>跑速</th><td>"+data.速度+"</td>"+
-      "<td colspan='2' rowspan='2'>"+data.範圍+"</td>"+
+      "<th>攻頻</th><td id='攻頻'>"+data.攻頻.toFixed(1)+" s</td>"+
+      "<th>跑速</th><td id='跑速'>"+data.速度+"</td>"+
+      "<td colspan='2' rowspan='2' id='範圍'>"+data.範圍+"</td>"+
       "</tr><tr>"+
-      "<th>花費</th><td>"+data.花費+"</td>"+
-      "<th>再生産</th><td>"+data.再生産.toFixed(1)+" s</td>"+
+      "<th>花費</th><td id='花費'>"+data.花費+"</td>"+
+      "<th>再生産</th><td id='再生産'>"+data.再生産.toFixed(1)+" s</td>"+
       "</tr><tr>"+
-      "<td colspan='6'>"+data.特性+"</td>"+
+      "<td colspan='6' id='特性' "+(
+      data.特性.indexOf("連續攻擊") != -1 ?
+      "original='"+data.特性+"'>"+
+      serialATK(data.特性,levelToValue(data.lv1攻擊,data.稀有度,30)) :
+      ">"+data.特性)+
+      "</td>"+
       "</tr>"
     );
+    initialSlider(data);
     scroll_to_class('display',0) ;
+  }
+  function initialSlider(data) {
+    $("#level").slider({
+      max: 100,
+      min: 1,
+      value: 30,
+    });
+    $("#level").on("slide", function(e,ui) {
+      $("#level_num").html(ui.value);
+      updateState(ui.value);
+    });
+    $("#level").on("slidechange", function(e,ui) {
+      $("#level_num").html(ui.value);
+      updateState(ui.value);
+    });
+    function updateState(level) {
+      let rarity = data.稀有度;
+      let change = ['體力','硬度','攻擊力','DPS'] ;
+      for(let i in change){
+        let target = $('.dataTable').find('#'+change[i]) ;
+        let original = target.attr('original');
+        target.html(levelToValue(original,rarity,level).toFixed(0))
+              .css('background-color',' rgba(242, 213, 167, 0.93)');
+        setTimeout(function () {
+          target.css('background-color','rgba(255, 255, 255, .9)');
+        },500);
+      }
+      let target = $('.dataTable').find('#特性');
+      target.html(serialATK(data.特性,levelToValue(data.lv1攻擊,data.稀有度,level)));
+    }
   }
   function search() {
     let rarity = $(".select_rarity [value=1]"),
@@ -209,8 +253,7 @@ $(document).ready(function () {
       buffer_1 = buffer_3;
       buffer_3 = [];
       for(let id in buffer_1){
-        let value = level_bind ? levelToValue(buffer_1[id][name],buffer_1[id].稀有度,lv) : buffer_1[id][name];
-        console.log(value+":"+limit+"("+reverse+")");
+        let value = level_bind ? levelToValue(buffer_1[id][name],buffer_1[id].稀有度,30) : buffer_1[id][name];
         if(value > limit && !reverse) buffer_3.push(buffer_1[id]);
         else if (value < limit && reverse) buffer_3.push(buffer_1[id]);
       }
@@ -306,7 +349,13 @@ $(document).ready(function () {
           "</tr><tr>"+
           "<td id='再生産'>"+data.再生産.toFixed(1)+"</td>"+
           "</tr><tr>"+
-          "<td>"+data.特性+"</td>"+
+          "<td id='特性' "+
+          (data.特性.indexOf("連續攻擊") != -1 ?
+          "original='"+data.特性+"' atk='"+data.lv1攻擊+"'>"+
+          serialATK(data.特性,levelToValue(data.lv1攻擊,data.稀有度,30)) :
+          ">"+data.特性
+          )+
+          "</td>"+
           "</tr>"+
           "</table>"+
           "</div>"
@@ -459,6 +508,10 @@ $(document).ready(function () {
             target.css('background-color','rgba(255, 255, 255, .9)');
           },500);
         }
+        let target = $('.compareTable #'+id).find('#特性'),
+            original = target.attr('original'),
+            atk = target.attr('atk');
+        target.html(serialATK(original,levelToValue(atk,rarity,level)))
         highlightTheBest();
         $('.comparedatahead').find('th').css('border-left','0px solid');
       }
@@ -563,24 +616,12 @@ $(document).ready(function () {
   });
   $(".slider").slider();
 
-  $("#level").slider('option',{
-    animate: 0,
-    max: 100,
-    min: 1,
-    value: 30,
-  });
   $('#selected').sortable('option',{
     item: '> .card-group',
     connectWith: ".compareTarget"
   });
   $('.compareTarget').sortable('option',{
     item: '> comparedata'
-  });
-  $("#level").on("slide", function(e,ui) {
-    $("#level_num").html(ui.value);
-  });
-  $("#level").on("slidechange", function(e,ui) {
-    $("#level_num").html(ui.value);
   });
   $(".slider").on("slide", function(e,ui) {
     $(this).parent().siblings('td.value_display').html(ui.value);
@@ -657,11 +698,6 @@ $(document).ready(function () {
       {scrollTop: current+348*n},
       100,'easeInOutCubic');
   }
-  function levelChange(n) {
-    original = Number($("#level").slider( "option", "value" ));
-    if(original == 1 || original == 100) return ;
-    $("#level").slider( "option", "value" ,original+n);
-  }
   function levelToValue(origin,rarity,lv) {
     let limit,result ;
     switch (rarity) {
@@ -694,6 +730,14 @@ $(document).ready(function () {
 
     if(value && value<range[1] && value>range[0]) $("#slider_holder").find('.slider').slider('option','value',value);
     else $("#slider_holder").find('.slider').slider('option','value',filter_org);
+  }
+  function serialATK(prop,atk) {
+      let b = prop.split("（")[0];
+      let arr = prop.split("（")[1].split("）")[0].split(",") ;
+      // console.log(b+"("+d.join()+")")
+      for(let i in arr) arr[i] = (atk*Number(arr[i])).toFixed(0) ;
+      return b+"（"+arr.join(' ')+"）" ;
+
   }
   function sleep(milliseconds) {
     var start = new Date().getTime();
