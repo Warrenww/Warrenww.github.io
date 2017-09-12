@@ -6,9 +6,20 @@ $(document).ready(function () {
   var compare = [] ;
   var filter_name = '' ;
 
-  console.log(window.location);
+  if(screen.width < 768){
+    $("#lower_table .value_display").attr("colspan",7);
+  }
 
   // $(document).on('click','#updateCatData',function () {socket.emit('force_update_cat_data');});
+  $(document).on('keypress', 'input', function(e) {
+    let code = (e.keyCode ? e.keyCode : e.which);
+    if (code == 13) {
+      $(this).blur();
+    }
+  });
+  $(document).on('click', 'input',function (e) {
+    e.stopPropagation();
+  });
   $(document).on('click','#start',function () {
     var myWindow;
     myWindow = window.open("http://battlecats-db.com/unit/status_r_all.html", "myWindow", "width=1,height=1");
@@ -28,45 +39,8 @@ $(document).ready(function () {
   })
   $(document).on('click','#search_ability',search) ;
   $(document).on('click','.glyphicon-refresh',toggleCatStage);
-  $(document).on('click','.value_display',function () {
-    if(!$(this).siblings('td').children().slider('option','disabled')) {
-      let val = $(this).text();
-      $(this).html('<input type="text" value="' +val + '"></input>');
-      $(this).find('input').select();
-    }
-  });
-  $(document).on('keypress', '.value_display input', function(e) {
-    let code = (e.keyCode ? e.keyCode : e.which);
-    if (code == 13) {
-      $(this).blur();
-    }
-  });
-  $(document).on('blur', '.value_display input', function() {
-    let val = $(this).val();
-    let slider = $(this).parent().siblings('td').children();
-    let step = Number(slider.slider('option','step'));
-    let max = Number(slider.slider('option','max')),
-        min = Number(slider.slider('option','min'));
-
-    val = Math.round(val/step)*step ;
-
-
-    if(val<min || val>max) {
-      $(this).parent().html(slider.slider('option','value'));
-      return ;
-    }
-    else slider.slider('option','value',val);
-
-  });
   $(document).on('click','#compare',compareCat);
   $(document).on('click','.compareTable .comparedatahead th',sortCompareCat);
-  $(document).on('keypress','#searchBox',function(e) {
-    let code = (e.keyCode ? e.keyCode : e.which);
-    if (code == 13) {
-      $(this).blur();
-      TextSearch();
-    }
-  });
   $(document).on('click','#searchBut',TextSearch);
   var lv_input_org ;
   $(document).on('click','.comparedata #level',function () {
@@ -74,17 +48,15 @@ $(document).ready(function () {
       $(this).html('<input type="text" value="' +lv_input_org+ '"></input>');
       $(this).find('input').select();
   });
-  $(document).on('click', '.comparedata #level input',function (e) {
-    e.stopPropagation();
-  });
-  $(document).on('keypress', '.comparedata #level input', function(e) {
-      let code = (e.keyCode ? e.keyCode : e.which);
-      if (code == 13) {
-        $(this).blur();
-      }
-  });
   $(document).on('blur', '.comparedata #level input', changeCompareLevel);
   $(document).on('click','.filter_option',filterSlider);
+  var filter_org ;
+  $(document).on('click','.value_display,#level_num',function () {
+      filter_org = Number($(this).text());
+      $(this).html('<input type="text" value="' +filter_org+ '"></input>');
+      $(this).find('input').select();
+  });
+  $(document).on('blur','.value_display input',changeSlider) ;
 
   var rarity = ['基本','EX','稀有','激稀有','激稀有狂亂','超激稀有'] ;
   for(let i in rarity) $(".select_rarity").append("<span class='button' name='"+rarity[i]+"' value='0' >"+rarity[i]+"</span>") ;
@@ -143,14 +115,23 @@ $(document).ready(function () {
   function displayCatData(id) {
     let data = catdata[id] ;
     let lv = Number($("#level").slider( "option", "value" )) ;
+    let html = "" ;
+
+    html += screen.width > 400 ? "<tr>"+
+    "<th style='height:80px;padding:0'><img src=\"http://imgs-server.com/battlecats/u"+id+".png\"style='height:100%'></th>"+
+    "<th colspan='5'>"+data.全名+"</th>"+
+    "</tr>" : "<tr>"+
+    "<th colspan='6' style='height:80px;padding:0;background-color:transparent'><img src=\"http://imgs-server.com/battlecats/u"+id+".png\"style='height:100%'></th>"+
+    "</tr><tr>"+
+    "<th colspan='6'>"+data.全名+"</th>"+
+    "</tr>" ;
+
 
     $(".dataTable").empty();
     $('.compareTable').empty();
     $(".dataTable").append(
+      html+
       "<tr>"+
-      "<th style='height:80px;padding:0'><img src=\"http://imgs-server.com/battlecats/u"+id+".png\"style='height:100%'></th>"+
-      "<th colspan='5'>"+data.全名+"</th>"+
-      "</tr><tr>"+
       "<th>體力</th><td>"+levelToValue(data.lv1體力,data.稀有度,lv).toFixed(0)+"</td>"+
       "<th>KB</th><td>"+data.kb+"</td>"+
       "<th>硬度</th><td>"+levelToValue(data.lv1硬度,data.稀有度,lv).toFixed(0)+"</td>"+
@@ -232,6 +213,8 @@ $(document).ready(function () {
 
     console.log(buffer_3) ;
     scroll_to_div('selected');
+    // alert(buffer_3.length);
+    // generatePage(buffer_3.length);
     $("#selected").empty();
     $("#selected").scrollTop(0);
     $("#selected").append(condenseCatName(buffer_3));
@@ -514,6 +497,7 @@ $(document).ready(function () {
       $('.active').html('<i class="material-icons">&#xe837;</i>');
     }
     else{
+      filter_name = "" ;
       $(".filter_option").attr('active','false');
       $(this).text('全選');
       $('.active').html('<i class="material-icons">&#xe836;</i>');
@@ -526,11 +510,11 @@ $(document).ready(function () {
           value = $(this).attr('value'),
           width = $(this).outerWidth()-10,
           active = $(this).attr('active') == 'true' ? true : false ,
-          reverse = $(this).attr('active') == 'true' ? '以下' : '以上';
+          reverse = $(this).attr('reverse') == 'true' ? '以下' : '以上';
 
       // alert(JSON.stringify(position));
       position.top -= 30 ;
-        if(active){
+        if(active && screen.width > 768){
           $("#TOOLTIP").finish().fadeIn();
           $("#TOOLTIP").offset(position).width(width).text(value+reverse) ;
         }
@@ -594,10 +578,10 @@ $(document).ready(function () {
     $("#level_num").text(ui.value);
   });
   $(".slider").on("slide", function(e,ui) {
-    $(this).parent().siblings('td.value_display').text(ui.value);
+    $(this).parent().siblings('td.value_display').html(ui.value);
   });
   $(".slider").on("slidechange", function(e,ui) {
-    $(this).parent().siblings('td.value_display').text(ui.value);
+    $(this).parent().siblings('td.value_display').html(ui.value);
   });
   $('.compareTarget').on('sortover',function (e,ui) {
     $("#compare").show();
@@ -687,6 +671,25 @@ $(document).ready(function () {
     }
     return lv<limit ? (0.8+0.2*lv)*origin : origin*(0.8+0.2*limit)+origin*0.1*(lv-limit) ;
   }
+  function generatePage(n) {
+    $(".page_group").append("<p>Total: "+n+"</p>");
+    n = Math.ceil(n/8) ;
+    for(let i=1;i<=n;i++){
+      $(".page_group").append("<span class='glyphicon'>&#xe201;</span>")
+    }
+
+  }
+  function changeSlider() {
+    let target = $("#"+filter_name+".filter_option");
+    let range = JSON.parse(target.attr('range')),
+        step = Number(target.attr('step')),
+        value = Number($(this).val()) ;
+
+    value = Math.round(value/step)*step ;
+
+    if(value && value<range[1] && value>range[0]) $("#slider_holder").find('.slider').slider('option','value',value);
+    else $("#slider_holder").find('.slider').slider('option','value',filter_org);
+  }
   function sleep(milliseconds) {
     var start = new Date().getTime();
     while (true) {
@@ -697,7 +700,7 @@ $(document).ready(function () {
   }
 
   var xmlhttp = new XMLHttpRequest();
-  var url = window.location.hostname == 'localhost' ? "js/Catdata.txt" : "public/js/Catdata.txt";
+  var url = "public/js/Catdata.txt";
 
   xmlhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {

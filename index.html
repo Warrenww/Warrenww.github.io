@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="css/index.css" />
     <link rel="stylesheet" href="public/css/index.css" />
   </head>
   <body>
@@ -50,10 +49,10 @@
               <td style="width:500px" class="level" colspan="3">
                 <div id="level" class="slider" init-val='30'></div>
               </td>
-              <td style="width:125px" colspan="1">
-                <span id="lv_minus" class="glyphicon glyphicon-minus"></span>
+              <td style="width:125px" colspan="1" >
                 <span id="level_num">30</span>
-                <span id="lv_plus" class="glyphicon glyphicon-plus"></span>
+                <!-- <span id="lv_minus" class="glyphicon glyphicon-minus"></span>
+                <span id="lv_plus" class="glyphicon glyphicon-plus"></span> -->
               </td >
             </tr>
 
@@ -99,6 +98,9 @@
           <div class="compareSorce">
             <div id="selected" class="sortable">
             </div>
+            <div class="page_group">
+
+            </div>
             <div class="button_group" >
               <button id="pre_sel_pg"><span class="glyphicon glyphicon-chevron-up"></span>上一排</button>
               <button id="compare" hidden>compare</span></button>
@@ -127,8 +129,7 @@
     <script src="https://johnny.github.io/jquery-sortable/js/jquery-sortable.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="js/html2canvas.min.js"></script>
-    <script src="js/index.js"></script>
+    <script src="public/js/html2canvas.min.js"></script>
     <script src="public/js/index.js"></script>
     <script src="../js/jquery.easing.1.3.js"></script>
     <script src="/socket.io/socket.io.js"></script>
