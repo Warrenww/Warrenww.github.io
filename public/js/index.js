@@ -99,7 +99,9 @@ $(document).ready(function () {
       let current = id.substring(0,3) ;
       if(current == now){
         html += '<span class="card" value="'+id+'" '+
-                'style="background-image:url('+image+id+'.png);display:none">'+
+                'style="background-image:url('+
+                (image_list.indexOf("u"+id+".png") ? "public/css/footage/u"+id+".png" : image+id+'.png')
+                +');display:none">'+
                 name+'</span>' ;
       }
       else{
@@ -107,7 +109,9 @@ $(document).ready(function () {
         html += '<span class="card-group" value="'+current+'">'+
                 '<span class="glyphicon glyphicon-refresh"></span>'+
                 '<span class="card" value="'+id+'" '+
-                'style="background-image:url('+image+id+'.png)">'+
+                'style="background-image:url('+
+                (image_list.indexOf("u"+id+".png") ? "public/css/footage/u"+id+".png" : image+id+'.png')
+                +')">'+
                 name+'</span>' ;
         now = current ;
       }
@@ -117,12 +121,17 @@ $(document).ready(function () {
   function displayCatData(id) {
     let data = catdata[id] ;
     let html = "" ;
+    let image = 'http://imgs-server.com/battlecats/u' ;
 
     html += screen.width > 400 ? "<tr>"+
-    "<th style='height:80px;padding:0'><img src=\"http://imgs-server.com/battlecats/u"+id+".png\"style='height:100%'></th>"+
+    "<th style='height:80px;padding:0'><img src='"+
+    (image_list.indexOf("u"+id+".png") ? "public/css/footage/u"+id+".png" : image+id+'.png')
+    +"' style='height:100%'></th>"+
     "<th colspan='5' rarity='"+data.稀有度+"' id='全名'>"+data.全名+"</th>"+
     "</tr>" : "<tr>"+
-    "<th colspan='6' style='height:80px;padding:0;background-color:transparent'><img src=\"http://imgs-server.com/battlecats/u"+id+".png\"style='height:100%'></th>"+
+    "<th colspan='6' style='height:80px;padding:0;background-color:transparent'><img src='"+
+    (image_list.indexOf("u"+id+".png") ? "public/css/footage/u"+id+".png" : image+id+'.png')
+    +"' style='height:100%'></th>"+
     "</tr><tr>"+
     "<th colspan='6' rarity='"+data.稀有度+"' id='全名'>"+data.全名+"</th>"+
     "</tr>" ;
@@ -318,6 +327,7 @@ $(document).ready(function () {
       );
       for(let i in compare){
         let data = catdata[compare[i]];
+        let image = 'http://imgs-server.com/battlecats/u' ;
         console.log(data);
         $(".compareTable").append(
           "<div style='flex:1' class='comparedata' id='"+data.id+"'>"+
@@ -325,7 +335,9 @@ $(document).ready(function () {
           "<tr>"+
           "<th id='level' rarity='"+data.稀有度+"'>30</th>"+
           "</tr><tr>"+
-          "<th style='height:80px;padding:0'><img src=\"http://imgs-server.com/battlecats/u"+compare[i]+".png\"style='height:100%'></th>"+
+          "<th style='height:80px;padding:0'><img src='"+
+          (image_list.indexOf("u"+compare[i]+".png") ? "public/css/footage/u"+compare[i]+".png" : image+compare[i]+'.png')
+          +"' style='height:100%'></th>"+
           "</tr><tr>"+
           "<th id='全名'>"+data.全名+"</th>"+
           "</tr><tr>"+
@@ -714,14 +726,6 @@ $(document).ready(function () {
     }
     return lv<limit ? (0.8+0.2*lv)*origin : origin*(0.8+0.2*limit)+origin*0.1*(lv-limit) ;
   }
-  function generatePage(n) {
-    $(".page_group").append("<p>Total: "+n+"</p>");
-    n = Math.ceil(n/8) ;
-    for(let i=1;i<=n;i++){
-      $(".page_group").append("<span class='glyphicon'>&#xe201;</span>")
-    }
-
-  }
   function changeSlider() {
     let target = $("#"+filter_name+".filter_option");
     let range = JSON.parse(target.attr('range')),
@@ -751,8 +755,11 @@ $(document).ready(function () {
     }
   }
 
-  var xmlhttp = new XMLHttpRequest();
-  var url = "public/js/Catdata.txt";
+  var xmlhttp = new XMLHttpRequest(),
+      xmlhttp_2 = new XMLHttpRequest();
+  var url = "public/js/Catdata.txt",
+      url_2 = "public/css/footage/dir.txt";
+  var image_list ;
 
   xmlhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -763,8 +770,17 @@ $(document).ready(function () {
           catdata = data ;
       }
   };
+  xmlhttp_2.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+          var data = this.responseText;
+          console.log(data.split("\n")) ;
+          image_list = data ;
+      }
+  };
   xmlhttp.open("GET", url, true);
   xmlhttp.send();
+  xmlhttp_2.open("GET", url_2, true);
+  xmlhttp_2.send();
 
 
 });
