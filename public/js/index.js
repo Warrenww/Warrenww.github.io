@@ -4,6 +4,9 @@ $(document).ready(function () {
   var timer = new Date().getTime();
   var compare = [] ;
   var filter_name = '' ;
+  const image_url = 'http://imgs-server.com/battlecats/u' ;
+  const image_local =  "public/css/footage/cat/u" ;
+
   console.log(window)
   if(screen.width < 768){
     $("#lower_table .value_display").attr("colspan",7);
@@ -39,6 +42,13 @@ $(document).ready(function () {
   $(document).on('click','#compare',compareCat);
   $(document).on('click','.compareTable .comparedatahead th',sortCompareCat);
   $(document).on('click','#searchBut',TextSearch);
+  $(document).on('keypress','#searchBox',function (e) {
+    let code = (e.keyCode ? e.keyCode : e.which);
+    if (code == 13) {
+      TextSearch();
+    }
+  });
+
   var lv_input_org ;
   $(document).on('click','.comparedata #level',function () {
       lv_input_org = $(this).text();
@@ -91,7 +101,7 @@ $(document).ready(function () {
   function condenseCatName(data) {
     console.log('condensing....');
     let now = '000' ;
-    let image = 'http://imgs-server.com/battlecats/u' ;
+
     let html = '<span class="card-group" hidden>' ;
     for(let i in data){
       let name = data[i].全名;
@@ -100,7 +110,7 @@ $(document).ready(function () {
       if(current == now){
         html += '<span class="card" value="'+id+'" '+
                 'style="background-image:url('+
-                (image_list.indexOf("u"+id+".png") != -1 ? "public/css/footage/u"+id+".png" : image+id+'.png')
+                (image_list.indexOf("u"+id+".png") != -1 ? image_local+id+".png" : image_url+id+'.png')
                 +');display:none">'+
                 name+'</span>' ;
       }
@@ -110,7 +120,7 @@ $(document).ready(function () {
                 '<span class="glyphicon glyphicon-refresh"></span>'+
                 '<span class="card" value="'+id+'" '+
                 'style="background-image:url('+
-                (image_list.indexOf("u"+id+".png") != -1 ? "public/css/footage/u"+id+".png" : image+id+'.png')
+                (image_list.indexOf("u"+id+".png") != -1 ? image_local+id+".png" : image_url+id+'.png')
                 +')">'+
                 name+'</span>' ;
         now = current ;
@@ -121,11 +131,10 @@ $(document).ready(function () {
   function displayCatData(id) {
     let data = catdata[id] ;
     let html = "" ;
-    let image = 'http://imgs-server.com/battlecats/u' ;
 
     html += screen.width > 400 ? "<tr>"+
     "<th style='height:80px;padding:0'><img src='"+
-    (image_list.indexOf("u"+id+".png") != -1 ? "public/css/footage/u"+id+".png" : image+id+'.png')
+    (image_list.indexOf("u"+id+".png") != -1 ? image_local+id+".png" : image_url+id+'.png')
     +"' style='height:100%'></th>"+
     "<th colspan='5' rarity='"+data.稀有度+"' id='全名'>"+data.全名+"</th>"+
     "</tr>" : "<tr>"+
@@ -259,7 +268,7 @@ $(document).ready(function () {
           reverse = $(this).attr('reverse') == 'true' ? true : false ,
           limit = $(this).attr('value') ,
           level_bind = $(this).attr('lv-bind') == 'true' ? true : false ,
-          lv = Number($("#level").slider( "option", "value" )) ;
+          // lv = Number($("#level").slider( "option", "value" )) ;
       buffer_1 = [];
       buffer_1 = buffer_3;
       buffer_3 = [];
@@ -327,7 +336,7 @@ $(document).ready(function () {
       );
       for(let i in compare){
         let data = catdata[compare[i]];
-        let image = 'http://imgs-server.com/battlecats/u' ;
+
         console.log(data);
         $(".compareTable").append(
           "<div style='flex:1' class='comparedata' id='"+data.id+"'>"+
@@ -336,7 +345,7 @@ $(document).ready(function () {
           "<th id='level' rarity='"+data.稀有度+"'>30</th>"+
           "</tr><tr>"+
           "<th style='height:80px;padding:0'><img src='"+
-          (image_list.indexOf("u"+compare[i]+".png") != -1 ? "public/css/footage/u"+compare[i]+".png" : image+compare[i]+'.png')
+          (image_list.indexOf("u"+compare[i]+".png") != -1 ? image_local+compare[i]+".png" : image_url+compare[i]+'.png')
           +"' style='height:100%'></th>"+
           "</tr><tr>"+
           "<th id='全名'>"+data.全名+"</th>"+
@@ -758,7 +767,7 @@ $(document).ready(function () {
   var xmlhttp = new XMLHttpRequest(),
       xmlhttp_2 = new XMLHttpRequest();
   var url = "public/js/Catdata.txt",
-      url_2 = "public/css/footage/dir.txt";
+      url_2 = "public/css/footage/cat/dir.txt";
   var image_list ;
 
   xmlhttp.onreadystatechange = function() {
