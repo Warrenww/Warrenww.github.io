@@ -100,7 +100,7 @@ $(document).ready(function () {
       if(current == now){
         html += '<span class="card" value="'+id+'" '+
                 'style="background-image:url('+
-                (image_list.indexOf("u"+id+".png") ? "public/css/footage/u"+id+".png" : image+id+'.png')
+                (image_list.indexOf("u"+id+".png") != -1 ? "public/css/footage/u"+id+".png" : image+id+'.png')
                 +');display:none">'+
                 name+'</span>' ;
       }
@@ -110,7 +110,7 @@ $(document).ready(function () {
                 '<span class="glyphicon glyphicon-refresh"></span>'+
                 '<span class="card" value="'+id+'" '+
                 'style="background-image:url('+
-                (image_list.indexOf("u"+id+".png") ? "public/css/footage/u"+id+".png" : image+id+'.png')
+                (image_list.indexOf("u"+id+".png") != -1 ? "public/css/footage/u"+id+".png" : image+id+'.png')
                 +')">'+
                 name+'</span>' ;
         now = current ;
@@ -125,12 +125,12 @@ $(document).ready(function () {
 
     html += screen.width > 400 ? "<tr>"+
     "<th style='height:80px;padding:0'><img src='"+
-    (image_list.indexOf("u"+id+".png") ? "public/css/footage/u"+id+".png" : image+id+'.png')
+    (image_list.indexOf("u"+id+".png") != -1 ? "public/css/footage/u"+id+".png" : image+id+'.png')
     +"' style='height:100%'></th>"+
     "<th colspan='5' rarity='"+data.稀有度+"' id='全名'>"+data.全名+"</th>"+
     "</tr>" : "<tr>"+
     "<th colspan='6' style='height:80px;padding:0;background-color:transparent'><img src='"+
-    (image_list.indexOf("u"+id+".png") ? "public/css/footage/u"+id+".png" : image+id+'.png')
+    (image_list.indexOf("u"+id+".png") != -1 ? "public/css/footage/u"+id+".png" : image+id+'.png')
     +"' style='height:100%'></th>"+
     "</tr><tr>"+
     "<th colspan='6' rarity='"+data.稀有度+"' id='全名'>"+data.全名+"</th>"+
@@ -336,7 +336,7 @@ $(document).ready(function () {
           "<th id='level' rarity='"+data.稀有度+"'>30</th>"+
           "</tr><tr>"+
           "<th style='height:80px;padding:0'><img src='"+
-          (image_list.indexOf("u"+compare[i]+".png") ? "public/css/footage/u"+compare[i]+".png" : image+compare[i]+'.png')
+          (image_list.indexOf("u"+compare[i]+".png") != -1 ? "public/css/footage/u"+compare[i]+".png" : image+compare[i]+'.png')
           +"' style='height:100%'></th>"+
           "</tr><tr>"+
           "<th id='全名'>"+data.全名+"</th>"+
