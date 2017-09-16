@@ -3,11 +3,15 @@ $(document).ready(function () {
   var catdata ;
   var timer = new Date().getTime();
   var compare = [] ;
+  var setting = {
+        compare_max : 4 ,
+        display_id : false
+      } ;
   var filter_name = '' ;
   const image_url = 'http://imgs-server.com/battlecats/u' ;
   const image_local =  "public/css/footage/cat/u" ;
 
-  console.log(window)
+  // console.log(window) ;
   if(screen.width < 768){
     $("#lower_table .value_display").attr("colspan",7);
   }
@@ -48,6 +52,8 @@ $(document).ready(function () {
       TextSearch();
     }
   });
+  $(document).on('click','#setting',showSetting) ;
+  $(document).on('click','#setting-submit',changeSetting) ;
 
   var lv_input_org ;
   $(document).on('click','.comparedata #level',function () {
@@ -88,15 +94,14 @@ $(document).ready(function () {
       $(".dataTable").html('');
       $(".compareTarget").children().remove();
       $(".button_group").hide();
-      $("#lower_table tbody").hide();
       $("#searchBox").val('');
     }
     $("."+className).find(".button").each(function () {
       $(this).attr('value','0');
     });
-    let This = $("."+className).children().slider('widget');
-    let init = This.attr('init-val');
-    This.slider('value',init);
+    // let This = $("."+className).children().slider('widget');
+    // let init = This.attr('init-val');
+    // This.slider('value',init);
   }
   function condenseCatName(data) {
     console.log('condensing....');
@@ -131,15 +136,18 @@ $(document).ready(function () {
   function displayCatData(id) {
     let data = catdata[id] ;
     let html = "" ;
+    html += setting.display_id ? "<tr><th>Id</th><td id='id'>"+id+"</td></tr>" : "" ;
 
-    html += screen.width > 400 ? "<tr>"+
+    html += screen.width > 400 ?
+    "<tr>"+
     "<th style='height:80px;padding:0'><img src='"+
     (image_list.indexOf("u"+id+".png") != -1 ? image_local+id+".png" : image_url+id+'.png')
     +"' style='height:100%'></th>"+
     "<th colspan='5' rarity='"+data.稀有度+"' id='全名'>"+data.全名+"</th>"+
-    "</tr>" : "<tr>"+
+    "</tr>" :
+    "<tr>"+
     "<th colspan='6' style='height:80px;padding:0;background-color:transparent'><img src='"+
-    (image_list.indexOf("u"+id+".png") != -1 ? "public/css/footage/u"+id+".png" : image+id+'.png')
+    (image_list.indexOf("u"+id+".png") != -1 ? image_local+id+".png" : image_url+id+'.png')
     +"' style='height:100%'></th>"+
     "</tr><tr>"+
     "<th colspan='6' rarity='"+data.稀有度+"' id='全名'>"+data.全名+"</th>"+
@@ -300,6 +308,7 @@ $(document).ready(function () {
       $(".compareTable").append(
         "<div style='flex:1' class='comparedatahead'>"+
         "<table>"+
+        (setting.display_id ? "<tr><th>ID</th></tr>" : "") +
         "<tr>"+
         "<th>Level</th>"+
         "</tr><tr>"+
@@ -341,6 +350,7 @@ $(document).ready(function () {
         $(".compareTable").append(
           "<div style='flex:1' class='comparedata' id='"+data.id+"'>"+
           "<table>"+
+          (setting.display_id ? "<tr><th id='id'>"+data.id+"</th></tr>" : "") +
           "<tr>"+
           "<th id='level' rarity='"+data.稀有度+"'>30</th>"+
           "</tr><tr>"+
@@ -665,7 +675,7 @@ $(document).ready(function () {
       },1000);
       $("#selected").sortable('cancel');
     }
-    else if(compare.length > 3){
+    else if(compare.length > setting.compare_max-1){
       alert('啊 塞滿了') ;
       $("#selected").sortable('cancel');
     }
@@ -755,6 +765,28 @@ $(document).ready(function () {
       return b+"（"+arr.join(' ')+"）"+c ;
 
   }
+  function showSetting() {
+    let modal = $("#settingModal") ;
+    modal.find("#compare_max").children('#value').text(setting.compare_max);
+    modal.find("#display_id").text(setting.display_id?"yes":"no");
+
+    let val = Number(modal.find("#compare_max").children('#value').text()) ;
+    modal.find("#compare_max").children('.glyphicon').click(function () {
+      if(val>3 && $(this).is('.glyphicon-minus')) val -- ;
+      else if(val<7 && $(this).is('.glyphicon-plus')) val++ ;
+      $(this).siblings("#value").text(val) ;
+    });
+    modal.find("#display_id").click(function () {
+      let val = $(this).text();
+      $(this).text(val == "yes"?"no":"yes");
+    });
+  }
+  function changeSetting() {
+    let modal = $("#settingModal") ;
+    setting.compare_max = Number(modal.find("#compare_max").children('#value').text());
+    setting.display_id = modal.find("#display_id").text() == "yes" ? true : false ;
+    modal.modal("hide");
+  }
   function sleep(milliseconds) {
     var start = new Date().getTime();
     while (true) {
@@ -764,32 +796,41 @@ $(document).ready(function () {
     }
   }
 
-  var xmlhttp = new XMLHttpRequest(),
-      xmlhttp_2 = new XMLHttpRequest();
-  var url = "public/js/Catdata.txt",
-      url_2 = "public/css/footage/cat/dir.txt";
+  var xmlhttp = new XMLHttpRequest() ;
+  var url = [];
+  url.push("public/js/Catdata.txt") ;
+  url.push("public/css/footage/cat/dir.txt") ;
+  url.push("public/test.json") ;
   var image_list ;
+
+  xmlhttp.open("GET", url[0], true);
+  xmlhttp.send();
 
   xmlhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
+        console.log(this.responseURL);
+        if(this.responseURL.indexOf("Catdata.txt") != -1){
           var data = JSON.parse(this.responseText);
           console.log(data) ;
           let nowtime =  new Date().getTime();
           console.log(nowtime-timer) ;
           catdata = data ;
+          xmlhttp.open("GET", url[1], true);
+          xmlhttp.send();
+        }
+        else if(this.responseURL.indexOf("cat/dir.txt") != -1){
+              var data = this.responseText;
+              console.log(data.split("\n")) ;
+              image_list = data ;
+              xmlhttp.open("GET", url[2], true);
+              xmlhttp.send();
+        }
+        else{
+          console.log(JSON.parse(this.response))
+        }
       }
   };
-  xmlhttp_2.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-          var data = this.responseText;
-          console.log(data.split("\n")) ;
-          image_list = data ;
-      }
-  };
-  xmlhttp.open("GET", url, true);
-  xmlhttp.send();
-  xmlhttp_2.open("GET", url_2, true);
-  xmlhttp_2.send();
+
 
 
 });

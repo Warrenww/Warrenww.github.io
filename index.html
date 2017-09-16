@@ -14,8 +14,10 @@
     <div class="head">
       <div class="start_holder">
         <button id='start' >遊戲開始</button>
+        <button id='setting' data-toggle="modal" data-target="#settingModal">選項</button>
       </div>
     </div>
+
     <div class="page_1">
 
       <div style="text-align:left" hidden>
@@ -122,6 +124,36 @@
       <button id="test">test</button>
     </div>
     <div id="TOOLTIP">This is a tool tip</div>
+    <div class="modal fade" id="settingModal" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Setting</h4>
+          </div>
+          <div class="modal-body">
+            <table class="setting_table">
+              <tr>
+                <th>最大比較欄數</th>
+                <td id="compare_max">
+                  <span class="glyphicon glyphicon-minus"></span>
+                  <span id="value"></span>
+                  <span class="glyphicon glyphicon-plus"></span>
+                </td>
+              </tr>
+              <tr>
+                <th>顯示ID</th>
+                <td id="display_id"></td>
+              </tr>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button id="setting-submit" class="btn btn-default" >Confirm</button>
+            <button id="setting-cancel" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://johnny.github.io/jquery-sortable/js/jquery-sortable.js"></script>
