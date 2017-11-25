@@ -10,6 +10,13 @@ var gsjson = require('google-spreadsheet-to-json');
 
 io.on('connection', function(socket){
   console.log('a user connected');
+  fs.stat('public/js/Catdata.txt', function(err,stats){
+    var mtime = Date.parse(stats.mtime),
+        today = Date.now();
+    timepass = today - mtime ;
+    console.log(timepass);
+    if(timepass > 86400000) loadcatData()
+  });
 
   socket.on('force_update_cat_data', (data,callback) =>{
     console.log('Someone force me to load cat data ...QAQ') ;
@@ -26,14 +33,32 @@ io.on('connection', function(socket){
       let cat = [] ;
       gsjson({
           spreadsheetId: sheet_ID,
-          // worksheet: data.rare,
+          // worksheet: ['貓咪資料']
           hash : 'id'
       })
       .then(function(result) {
+        // console.log(result)
           socket.emit('push cat data',JSON.stringify(result));
           fs.writeFile('public/js/Catdata.txt', JSON.stringify(result), (err) => {
             if (err) throw err;
-            console.log('It\'s saved!');
+            console.log('Catdata is saved!');
+          });
+      })
+      .catch(function(err) {
+          console.log(err.message);
+          console.log(err.stack);
+      });
+      gsjson({
+          spreadsheetId: sheet_ID,
+          worksheet: ['聯組']
+          // hash : 'id'
+      })
+      .then(function(result) {
+        // console.log(result)
+          socket.emit('push cat data',JSON.stringify(result));
+          fs.writeFile('public/js/Combo.txt', JSON.stringify(result), (err) => {
+            if (err) throw err;
+            console.log('Combo is saved!');
           });
       })
       .catch(function(err) {

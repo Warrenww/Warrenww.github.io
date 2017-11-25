@@ -1,6 +1,7 @@
 
 $(document).ready(function () {
   var catdata ;
+  var combodata ;
   var timer = new Date().getTime();
   var compare = [] ;
   var setting = {
@@ -79,12 +80,12 @@ $(document).ready(function () {
   var rarity = ['基本','EX','稀有','激稀有','激稀有狂亂','超激稀有'] ;
   for(let i in rarity) $(".select_rarity").append("<span class='button' name='"+rarity[i]+"' value='0' >"+rarity[i]+"</span>") ;
 
-  var color = ['對紅','對浮','對黒','對鋼鐵','對天使','對外星','對不死'];
+  var color = ['對紅','對浮','對黒','對鋼鐵','對天使','對外星','對不死','對白'];
   for(let i in color) $(".select_color").append("<span class='button' name='["+color[i]+"]' value='0'>"+color[i]+"</span>") ;
 
   var ability = ['增攻','降攻','免疫降攻','擅於攻擊','很耐打','超大傷害','爆擊','擊退','免疫擊退','連續攻擊','不死剋星',
                 '緩速','免疫緩速','暫停','免疫暫停','遠方攻擊','復活','波動','抵銷波動','免疫波動','2倍金錢','只能攻撃',
-                '攻城','鋼鐵'];
+                '攻城','鋼鐵','免疫傳送','破盾'];
   for(let i in ability) $(".select_ability").append("<span class='button' name='["+ability[i]+"]' value='0'>"+ability[i]+"</span>") ;
 
   function clearSelected(className) {
@@ -135,6 +136,18 @@ $(document).ready(function () {
   }
   function displayCatData(id) {
     let data = catdata[id] ;
+    let inclu_com = [] ;
+    grossID = id.substring(0,3) ;
+    // console.log(grossID) ;
+    for(let i in combodata){
+      for(let j=1;j<4;j++){
+        let t = grossID + "-" + j ;
+        if(combodata[i].cat.indexOf(t) != -1) inclu_com.push(combodata[i])
+      }
+    }
+    console.log(inclu_com) ;
+
+
     let html = "" ;
     html += setting.display_id ? "<tr><th>Id</th><td id='id'>"+id+"</td></tr>" : "" ;
 
@@ -143,7 +156,8 @@ $(document).ready(function () {
     "<th style='height:80px;padding:0'><img src='"+
     (image_list.indexOf("u"+id+".png") != -1 ? image_local+id+".png" : image_url+id+'.png')
     +"' style='height:100%'></th>"+
-    "<th colspan='5' rarity='"+data.稀有度+"' id='全名'>"+data.全名+"</th>"+
+    "<th colspan=3 rarity='"+data.稀有度+"' id='全名'>"+data.全名+"</th>"+
+    "<th colspan=2>"+Thisbro(grossID,id)+"</th>"+
     "</tr>" :
     "<tr>"+
     "<th colspan='6' style='height:80px;padding:0;background-color:transparent'><img src='"+
@@ -192,10 +206,66 @@ $(document).ready(function () {
       serialATK(data.特性,levelToValue(data.lv1攻擊,data.稀有度,30)) :
       ">"+data.特性)+
       "</td>"+
+      "</tr><tr>"+
+      "<th colspan='6'>發動聯組</th>"+
+      AddCombo(inclu_com)+
       "</tr>"
     );
     initialSlider(data);
     scroll_to_class('display',0) ;
+  }
+  function AddCombo(arr) {
+    if(arr.length == 0){
+      return "</tr><tr><td colspan=6>無可用聯組</td>"
+    }
+    let html = "",
+        pic_html  ;
+    for(let i in arr){
+      pic_html = "<div style='display:flex'>" ;
+      for(let j in arr[i].cat){
+        // console.log(arr[i].cat[j])
+        if(arr[i].cat[j] != "-"){
+          pic_html +=
+          '<span class="card" value="'+arr[i].cat[j]+'" '+
+          'style="background-image:url('+
+          (image_list.indexOf("u"+arr[i].cat[j]+".png") != -1 ? image_local+arr[i].cat[j]+".png" : image_url+arr[i].cat[j]+'.png')
+          +');width:90;height:60;margin:5px">'+
+          name+'</span>' ;
+        }
+      }
+      pic_html += "</div>" ;
+      html += "</tr><tr>"+
+              "<th>"+arr[i].catagory+"</th>"+
+              "<td>"+arr[i].name+"</td>"+
+              "<td rowspan=2 colspan=4 class='comboPic'>"+pic_html+"</td>"+
+              "</tr><tr>"+
+              "<td colspan=2>"+arr[i].effect+"</td>"
+
+    }
+    // console.log(html);
+    return html
+  }
+  function Thisbro(grossID,id) {
+    let arr = [] ;
+    for(let i=1;i<4;i++){
+      let t = grossID + "-" + i ;
+      if(catdata[t]){
+        arr.push(catdata[t].id);
+      }
+    }
+    console.log(JSON.stringify(arr))
+    let html = "<div style='display:flex;justify-content: center'>" ;
+    for(let i in arr) {
+      if(arr[i] == id) continue ;
+      html +=
+      '<span class="card" value="'+arr[i]+'" '+
+      'style="background-image:url('+
+      (image_list.indexOf("u"+arr[i]+".png") != -1 ? image_local+arr[i]+".png" : image_url+arr[i]+'.png')
+      +');width:90;height:60;margin:5px">'+
+      name+'</span>'  ;
+    }
+    html += "</div>" ;
+    return html
   }
   function initialSlider(data) {
     $("#level").slider({
@@ -241,6 +311,7 @@ $(document).ready(function () {
     console.log(rFilter);
     console.log(cFiliter);
     console.log(aFiliter);
+    console.log(color) ;
 
     let buffer_1 = [],
     buffer_2 = [],
@@ -249,6 +320,7 @@ $(document).ready(function () {
     if(color.length != 0){
       for(let id in catdata){
         for(let j in cFiliter){
+          console.log(catdata[id].id)
           if(catdata[id].tag == '[無]') break;
           else if(catdata[id].tag.indexOf(cFiliter[j]) != -1) {buffer_1.push(catdata[id]);break;}
         }
@@ -712,7 +784,7 @@ $(document).ready(function () {
   function toggleButton() {
     let val = Number($(this).attr('value')) ;
     $(this).attr('value',function () {
-      val = (val+1)%2 ;
+      val = val ? 0 : 1 ;
       return val ;
     });
   }
@@ -760,7 +832,7 @@ $(document).ready(function () {
       let b = prop.split("（")[0];
       let arr = prop.split("（")[1].split("）")[0].split(","),
           c = prop.split("（")[1].split("）")[1];
-      // console.log(b+"("+d.join()+")")
+      // console.log(b+"("+arr.join()+")")
       for(let i in arr) arr[i] = (atk*Number(arr[i])).toFixed(0) ;
       return b+"（"+arr.join(' ')+"）"+c ;
 
@@ -800,17 +872,18 @@ $(document).ready(function () {
   var url = [];
   url.push("public/js/Catdata.txt") ;
   url.push("public/css/footage/cat/dir.txt") ;
-  url.push("public/test.json") ;
+  url.push("public/js/Combo.txt") ;
   var image_list ;
 
-  xmlhttp.open("GET", url[0], true);
-  xmlhttp.send();
+    xmlhttp.open("GET", url[0], true);
+    xmlhttp.send();
 
   xmlhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         console.log(this.responseURL);
+        // console.log(this.response);
         if(this.responseURL.indexOf("Catdata.txt") != -1){
-          var data = JSON.parse(this.responseText);
+          var data = JSON.parse(this.responseText) ;
           console.log(data) ;
           let nowtime =  new Date().getTime();
           console.log(nowtime-timer) ;
@@ -821,12 +894,30 @@ $(document).ready(function () {
         else if(this.responseURL.indexOf("cat/dir.txt") != -1){
               var data = this.responseText;
               console.log(data.split("\n")) ;
+              let nowtime =  new Date().getTime();
+              console.log(nowtime-timer) ;
               image_list = data ;
               xmlhttp.open("GET", url[2], true);
               xmlhttp.send();
         }
-        else{
-          console.log(JSON.parse(this.response))
+        else if(this.responseURL.indexOf("Combo.txt") != -1){
+          var data = JSON.parse(this.responseText) ;
+          // console.log(data[0][0]) ;
+          var obj = {} ;
+          for(let i in data[0]){
+            var bufferobj = {
+              catagory : data[0][i].catagory,
+              name : data[0][i].name,
+              effect : data[0][i].effect,
+              amount : data[0][i].amount,
+              cat : [data[0][i].cat_1,data[0][i].cat_2,data[0][i].cat_3,data[0][i].cat_4,data[0][i].cat_5]
+            } ;
+            obj[i] = bufferobj;
+          }
+          console.log(obj)
+          let nowtime =  new Date().getTime();
+          console.log(nowtime-timer) ;
+          combodata = obj ;
         }
       }
   };
