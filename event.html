@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <meta charset='utf-8'/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="public/css/event.css" />
+    <link rel="stylesheet" href="public/css/navBar.css" />
+  </head>
+  <body>
+    <nav>
+      <a href="\">
+        <img src="public/css/footage/title.png" style="width:120px;height:60px;margin-left:20px" />
+      </a>
+      <div class="navLinkBox">
+        <a href="/">貓咪資料</a>
+        <a href="combo.html">敵人資料</a>
+        <a href="combo.html">查詢聯組</a>
+        <a href="calender.html">活動日程</a>
+      </div>
+      <div class="settingBox">
+        <a href="event.html"><i class="material-icons">info</i></a>
+        <i class="material-icons" data-toggle="modal" data-target="#settingModal" id='setting'>settings</i>
+      </div>
+    </nav>
+    <div>
+      <div class="debugwindow">
+        <h3>如果沒有東西出現請按下方重試按鈕</h3>
+        <div style="display:flex">
+          <button id="retry">Retry</button>
+          <button id="fine">沒事了</button>
+        </div>
+      </div>
+      <div>
+        <iframe></iframe>
+      </div>
+
+
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://johnny.github.io/jquery-sortable/js/jquery-sortable.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="public/js/html2canvas.min.js"></script>
+    <script src="public/js/event.js"></script>
+    <script src="../js/jquery.easing.1.3.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+  </body>
+</html>

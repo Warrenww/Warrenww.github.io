@@ -1,4 +1,3 @@
-
 $(document).ready(function () {
   var catdata ;
   var combodata ;
@@ -311,7 +310,7 @@ $(document).ready(function () {
     console.log(rFilter);
     console.log(cFiliter);
     console.log(aFiliter);
-    console.log(color) ;
+    // console.log(color) ;
 
     let buffer_1 = [],
     buffer_2 = [],
@@ -320,7 +319,7 @@ $(document).ready(function () {
     if(color.length != 0){
       for(let id in catdata){
         for(let j in cFiliter){
-          console.log(catdata[id].id)
+          // console.log(catdata[id].id)
           if(catdata[id].tag == '[無]') break;
           else if(catdata[id].tag.indexOf(cFiliter[j]) != -1) {buffer_1.push(catdata[id]);break;}
         }
@@ -736,7 +735,7 @@ $(document).ready(function () {
   });
   $('.compareTarget').on('sortover',function (e,ui) {
     $("#compare").show();
-    scroll_to_class('compareTarget',0);
+    // scroll_to_class('compareTarget',0);
     let input = ui.item.children('.card:visible') ;
     compare = $('.compareTarget').sortable('toArray',{attribute:'value'});
     if(compare.indexOf(input.attr('value')) != -1){

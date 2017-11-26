@@ -7,16 +7,31 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="public/css/index.css" />
+    <link rel="stylesheet" href="public/css/navBar.css" />
   </head>
   <body>
     <button id='updateCatData' hidden></button>
-
-    <div class="head">
+    <nav>
+      <a href="\">
+        <img src="public/css/footage/title.png" style="width:120px;height:60px;margin-left:20px" />
+      </a>
+      <div class="navLinkBox">
+        <a href="/">貓咪資料</a>
+        <a href="combo.html">敵人資料</a>
+        <a href="combo.html">查詢聯組</a>
+        <a href="calender.html">活動日程</a>
+      </div>
+      <div class="settingBox">
+        <a href="event.html"><i class="material-icons">info</i></a>
+        <i class="material-icons" data-toggle="modal" data-target="#settingModal" id='setting'>settings</i>
+      </div>
+    </nav>
+    <!-- <div class="head">
       <div class="start_holder">
         <button id='start' >遊戲開始</button>
         <button id='setting' data-toggle="modal" data-target="#settingModal">選項</button>
       </div>
-    </div>
+    </div> -->
 
     <div class="page_1">
 
@@ -121,7 +136,8 @@
       </div>
     </div>
     <div class="page_2" >
-      <button id="test">test</button>
+      <!-- <button id="test">test</button>
+      <button><a href="test.html">test</a></button> -->
     </div>
     <div id="TOOLTIP">This is a tool tip</div>
     <div class="modal fade" id="settingModal" role="dialog">
