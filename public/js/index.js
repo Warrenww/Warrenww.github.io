@@ -54,11 +54,24 @@ $(document).ready(function () {
   $(document).on('click',".button",toggleButton);
   $(document).on('click','#next_sel_pg',function () {turnPage(1);}) ;
   $(document).on('click','#pre_sel_pg',function () {turnPage(-1);}) ;
-  $(document).on('click','.card',function () {displayCatData($(this).attr('value'));});
+  $(document).on('click','.card',function () {
+    displayCatData($(this).attr('value'));
+    // console.log($(this).attr('value'));
+    // let cut =  ThisSite.indexOf(".html");
+    // location.search = $(this).attr('value');
+  });
   $(document).on('click',"#clear_all",function () {clearSelected('select');});
   $(document).on('click','#upper_table th',function () {
-    let className = $(this).siblings('td').attr('class') ;
-    clearSelected(className) ;
+    // let className = $(this).siblings('td').attr('class') ;
+    // clearSelected(className) ;
+    let on = $(this).siblings().children('[value=1]') ;
+    console.log(on.length);
+    if(on.length > 0) on.each(function () {$(this).attr('value',0);});
+    else $(this).siblings().children().each(function () {
+      $(this).attr('value',1);
+    });
+
+
   })
   $(document).on('click','#search_ability',search) ;
   $(document).on('click','.glyphicon-refresh',toggleCatStage);
@@ -94,6 +107,12 @@ $(document).ready(function () {
     val = val && val>0 && val<101 ? val : filter_org ;
     $('#level').slider('option','value',val);
   });
+  $(document).on('click','.searchCombo',function () {
+    let r = confirm("要轉移調聯組查詢畫面嗎?");
+    if (!r) return
+    let goto = $(this).attr('val');
+    location.href = "combo.html?q="+goto;
+  }) ;
 
   var rarity = ['基本','EX','稀有','激稀有','激稀有狂亂','超激稀有'] ;
   for(let i in rarity) $(".select_rarity").append("<span class='button' name='"+rarity[i]+"' value='0' >"+rarity[i]+"</span>") ;
@@ -106,22 +125,25 @@ $(document).ready(function () {
                 '攻城','鋼鐵','免疫傳送','破盾'];
   for(let i in ability) $(".select_ability").append("<span class='button' name='["+ability[i]+"]' value='0'>"+ability[i]+"</span>") ;
 
-  function clearSelected(className) {
-    if(className == 'select'){
-      $("#selected").empty();
-      $("#level").slider('option','value',30) ;
-      $(".dataTable").html('');
-      $(".compareTarget").children().remove();
-      $(".button_group").hide();
-      $("#searchBox").val('');
-    }
-    $("."+className).find(".button").each(function () {
-      $(this).attr('value','0');
-    });
-    // let This = $("."+className).children().slider('widget');
-    // let init = This.attr('init-val');
-    // This.slider('value',init);
-  }
+  var ThisSite = location.href,
+      q_pos = ThisSite.indexOf("?q=");
+
+  // function clearSelected(className) {
+  //   if(className == 'select'){
+  //     $("#selected").empty();
+  //     $("#level").slider('option','value',30) ;
+  //     $(".dataTable").html('');
+  //     $(".compareTarget").children().remove();
+  //     $(".button_group").hide();
+  //     $("#searchBox").val('');
+  //   }
+  //   $("."+className).find(".button").each(function () {
+  //     $(this).attr('value','0');
+  //   });
+  //   // let This = $("."+className).children().slider('widget');
+  //   // let init = This.attr('init-val');
+  //   // This.slider('value',init);
+  // }
   function condenseCatName(data) {
     console.log('condensing....');
     let now = '000' ;
@@ -230,7 +252,7 @@ $(document).ready(function () {
       "</tr>"
     );
     initialSlider(data);
-    scroll_to_class('display',0) ;
+    scroll_to_class("display",0) ;
   }
   function AddCombo(arr) {
     if(arr.length == 0){
@@ -255,20 +277,20 @@ $(document).ready(function () {
       pic_html += "</div>" ;
       html += screen.width > 768 ?
               ("</tr><tr>"+
-              "<th>"+arr[i].catagory+"</th>"+
+              "<th val='"+arr[i].id.substring(0,2)+"'>"+arr[i].catagory+"</th>"+
               "<td>"+arr[i].name+"</td>"+
               "<td rowspan=2 colspan=4 class='comboPic'>"+pic_html+"</td>"+
               "</tr><tr>"+
-              "<td colspan=2>"+arr[i].effect+"</td>") :
+              "<td colspan=2 class='searchCombo' val='"+arr[i].id.substring(0,4)+"'>"+arr[i].effect+"</td>") :
               ("</tr><tr>"+
-              "<th colspan=2>"+arr[i].catagory+"</th>"+
-              "<td colspan=4 rowspan=2>"+arr[i].effect+"</td>"+
+              "<th colspan=2 val='"+arr[i].id.substring(0,2)+"'>"+arr[i].catagory+"</th>"+
+              "<td colspan=4 rowspan=2 class='searchCombo' val='"+arr[i].id.substring(0,4)+"'>"+arr[i].effect+"</td>"+
               "</tr><tr>"+
-              "<td colspan=2>"+arr[i].name+"</td>"+
+              "<td colspan=2 >"+arr[i].name+"</td>"+
               "</tr><tr>"+
               "<td colspan=6 class='comboPic'>"+pic_html+"</td>"+
               "</tr><tr>"
-              )
+            );
 
     }
     // console.log(html);
@@ -919,12 +941,13 @@ $(document).ready(function () {
           let nowtime =  new Date().getTime();
           console.log(nowtime-timer) ;
           catdata = data ;
+
           xmlhttp.open("GET", url[1], true);
           xmlhttp.send();
         }
         else if(this.responseURL.indexOf("cat/dir.txt") != -1){
               var data = this.responseText;
-              console.log(data.split("\n")) ;
+              // console.log(data.split("\n")) ;
               let nowtime =  new Date().getTime();
               console.log(nowtime-timer) ;
               image_list = data ;
@@ -937,6 +960,7 @@ $(document).ready(function () {
           var obj = {} ;
           for(let i in data[0]){
             var bufferobj = {
+              id : data[0][i].id,
               catagory : data[0][i].catagory,
               name : data[0][i].name,
               effect : data[0][i].effect,
@@ -946,9 +970,12 @@ $(document).ready(function () {
             obj[i] = bufferobj;
           }
           console.log(obj)
-          let nowtime =  new Date().getTime();
-          console.log(nowtime-timer) ;
           combodata = obj ;
+          if(q_pos != -1){
+            var q_search = ThisSite.substring(q_pos+3);
+            console.log(q_search);
+            displayCatData(q_search);
+          }
         }
       }
   };
