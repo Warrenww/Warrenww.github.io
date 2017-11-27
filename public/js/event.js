@@ -5,6 +5,28 @@ $(document).ready(function () {
       mm = today.getMonth()+1,
       yy = today.getFullYear() ;
   let site = url+yy+mm+dd+".html";
+
+  var showMobilePanel = 1 ;
+  $(document).on('click','#m_nav_menu',function () {
+    if(showMobilePanel){
+      $(".m_nav_panel").css('right',0);
+      $("#m_nav_panel_BG").fadeIn();
+      showMobilePanel = 0 ;
+    }
+    else{
+      $(".m_nav_panel").css('right',-180);
+      $("#m_nav_panel_BG").fadeOut();
+      showMobilePanel = 1 ;
+    }
+  });
+  $(document).on('click','#m_nav_panel_BG',function () {
+    if(!showMobilePanel){
+      $(".m_nav_panel").css('right',-180);
+      $("#m_nav_panel_BG").fadeOut();
+      showMobilePanel = 1 ;
+    }
+  });
+  
   $("iframe").attr("src",site);
   $(document).on('click','#fine',function () {
     // alert("test");

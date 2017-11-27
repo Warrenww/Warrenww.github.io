@@ -8,6 +8,7 @@ body,html{
   user-select:none;
   -o-user-select:none;
   cursor: default;
+
 }
 .start_holder{
   display: flex;
@@ -318,24 +319,3 @@ table {
 .glyphicon-minus,
 .glyphicon-plus,
 #display_id{cursor: pointer;}
-@media screen and (max-width: 768px) {
-  #start{
-    font-size: 30px;
-    padding: 6px 120px;
-  }
-  .select,
-  .display
-  {
-    padding-left: 0;
-    padding-right: 0;
-  }
-  span.button{
-    font-size: 18px;
-    padding: 1px 15px;
-  }
-
-  .level,
-  #slider_holder td[colspan~='6'] ,
-  .compareTarget
-  {display: none;}
-}

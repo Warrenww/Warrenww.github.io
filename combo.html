@@ -8,11 +8,12 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="public/css/navBar.css" />
     <link rel="stylesheet" href="public/css/index.css" />
+    <link rel="stylesheet" href="public/css/rwd.css" />
   </head>
   <body>
     <nav>
       <a href="\">
-        <img src="public/css/footage/title.png" style="width:120px;height:60px;margin-left:20px" />
+        <img src="public/css/footage/title.png"/>
       </a>
       <div class="navLinkBox">
         <a href="/">貓咪資料</a>
@@ -24,7 +25,26 @@
         <a href="event.html"><i class="material-icons">info</i></a>
         <i class="material-icons" data-toggle="modal" data-target="#settingModal" id='setting'>settings</i>
       </div>
+      <div class="mobile">
+        <i class="material-icons" id="m_nav_menu">menu</i>
+      </div>
     </nav>
+    <div id="m_nav_panel_BG">
+
+    </div>
+    <div class="m_nav_panel">
+      <div class="m_navLinkBox">
+        <a href="/">貓咪資料</a>
+        <a href="combo.html">敵人資料</a>
+        <a href="combo.html">查詢聯組</a>
+        <a href="calender.html">活動日程</a>
+      </div>
+      <div class="m_settingBox">
+        <a href="event.html"><i class="material-icons">info</i></a>
+        <i class="material-icons" data-toggle="modal" data-target="#settingModal" id='setting'>settings</i>
+      </div>
+    </div>
+
     <div class="page_1" style="height:100%">
     </div>
 

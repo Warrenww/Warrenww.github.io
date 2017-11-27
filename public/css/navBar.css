@@ -6,6 +6,11 @@ nav{
     width: 100%;
     z-index: 999
 }
+nav a img{
+   width:120px;
+   height:60px;
+   margin-left:20px;
+}
 .navLinkBox{
   flex:3;
   height: 100% ;

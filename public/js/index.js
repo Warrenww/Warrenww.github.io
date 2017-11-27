@@ -15,7 +15,26 @@ $(document).ready(function () {
   if(screen.width < 768){
     $("#lower_table .value_display").attr("colspan",7);
   }
-
+  var showMobilePanel = 1 ;
+  $(document).on('click','#m_nav_menu',function () {
+    if(showMobilePanel){
+      $(".m_nav_panel").css('right',0);
+      $("#m_nav_panel_BG").fadeIn();
+      showMobilePanel = 0 ;
+    }
+    else{
+      $(".m_nav_panel").css('right',-180);
+      $("#m_nav_panel_BG").fadeOut();
+      showMobilePanel = 1 ;
+    }
+  });
+  $(document).on('click','#m_nav_panel_BG',function () {
+    if(!showMobilePanel){
+      $(".m_nav_panel").css('right',-180);
+      $("#m_nav_panel_BG").fadeOut();
+      showMobilePanel = 1 ;
+    }
+  });
   $(document).on('click','#updateCatData',function () {io().emit('force_update_cat_data');});
   $(document).on('keypress', 'input', function(e) {
     let code = (e.keyCode ? e.keyCode : e.which);
@@ -150,7 +169,7 @@ $(document).ready(function () {
     let html = "" ;
     html += setting.display_id ? "<tr><th>Id</th><td id='id'>"+id+"</td></tr>" : "" ;
 
-    html += screen.width > 400 ?
+    html += screen.width > 768 ?
     "<tr>"+
     "<th style='height:80px;padding:0'><img src='"+
     (image_list.indexOf("u"+id+".png") != -1 ? image_local+id+".png" : image_url+id+'.png')
@@ -161,7 +180,7 @@ $(document).ready(function () {
     "<tr>"+
     "<th colspan='6' style='height:80px;padding:0;background-color:transparent'><img src='"+
     (image_list.indexOf("u"+id+".png") != -1 ? image_local+id+".png" : image_url+id+'.png')
-    +"' style='height:100%'></th>"+
+    +"' style='height:100%'>"+Thisbro(grossID,id)+"</th>"+
     "</tr><tr>"+
     "<th colspan='6' rarity='"+data.稀有度+"' id='全名'>"+data.全名+"</th>"+
     "</tr>" ;
@@ -228,17 +247,28 @@ $(document).ready(function () {
           '<span class="card" value="'+arr[i].cat[j]+'" '+
           'style="background-image:url('+
           (image_list.indexOf("u"+arr[i].cat[j]+".png") != -1 ? image_local+arr[i].cat[j]+".png" : image_url+arr[i].cat[j]+'.png')
-          +');width:90;height:60;margin:5px">'+
-          name+'</span>' ;
+          +');'+
+          (screen.width > 768 ? "width:90;height:60;margin:5px" : "width:75;height:50;margin:0px")
+          +'">'+name+'</span>' ;
         }
       }
       pic_html += "</div>" ;
-      html += "</tr><tr>"+
+      html += screen.width > 768 ?
+              ("</tr><tr>"+
               "<th>"+arr[i].catagory+"</th>"+
               "<td>"+arr[i].name+"</td>"+
               "<td rowspan=2 colspan=4 class='comboPic'>"+pic_html+"</td>"+
               "</tr><tr>"+
-              "<td colspan=2>"+arr[i].effect+"</td>"
+              "<td colspan=2>"+arr[i].effect+"</td>") :
+              ("</tr><tr>"+
+              "<th colspan=2>"+arr[i].catagory+"</th>"+
+              "<td colspan=4 rowspan=2>"+arr[i].effect+"</td>"+
+              "</tr><tr>"+
+              "<td colspan=2>"+arr[i].name+"</td>"+
+              "</tr><tr>"+
+              "<td colspan=6 class='comboPic'>"+pic_html+"</td>"+
+              "</tr><tr>"
+              )
 
     }
     // console.log(html);
@@ -253,15 +283,16 @@ $(document).ready(function () {
       }
     }
     console.log(JSON.stringify(arr))
-    let html = "<div style='display:flex;justify-content: center'>" ;
+    let html = "<div style='display:flex;justify-content: center;"+(screen.width > 768 ? "" : "padding:10px")+"'>" ;
     for(let i in arr) {
       if(arr[i] == id) continue ;
       html +=
       '<span class="card" value="'+arr[i]+'" '+
       'style="background-image:url('+
       (image_list.indexOf("u"+arr[i]+".png") != -1 ? image_local+arr[i]+".png" : image_url+arr[i]+'.png')
-      +');width:90;height:60;margin:5px">'+
-      name+'</span>'  ;
+      +');'+
+      (screen.width > 768 ? "width:90;height:60;margin:5px" : "width:75;height:50;margin:5px")
+      +'">'+name+'</span>'  ;
     }
     html += "</div>" ;
     return html
@@ -798,8 +829,9 @@ $(document).ready(function () {
   }
   function turnPage(n) {
     let current = $("#selected").scrollTop();
+    let offset = screen.width > 768 ? 348 : 264 ;
     $("#selected").animate(
-      {scrollTop: current+348*n},
+      {scrollTop: current+offset*n},
       100,'easeInOutCubic');
   }
   function levelToValue(origin,rarity,lv) {
