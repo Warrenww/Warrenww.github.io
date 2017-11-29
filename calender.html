@@ -16,13 +16,9 @@
         <img src="public/css/footage/title.png" />
       </a>
       <div class="navLinkBox">
-        <a href="cat.html">貓咪資料</a>
-        <a href="enemy.html">敵人資料</a>
-        <a href="combo.html">查詢聯組</a>
-        <a href="calender.html">活動日程</a>
       </div>
       <div class="settingBox">
-        <a href="event.html"><i class="material-icons">info</i></a>
+        <i class="material-icons" data-toggle="modal" data-target="#helpModal">info</i>
         <i class="material-icons" data-toggle="modal" data-target="#settingModal" id='setting'>settings</i>
       </div>
       <div class="mobile">
@@ -34,13 +30,9 @@
     </div>
     <div class="m_nav_panel">
       <div class="m_navLinkBox">
-        <a href="cat.html">貓咪資料</a>
-        <a href="enemy.html">敵人資料</a>
-        <a href="combo.html">查詢聯組</a>
-        <a href="calender.html">活動日程</a>
       </div>
       <div class="m_settingBox">
-        <a href="event.html"><i class="material-icons">info</i></a>
+        <i class="material-icons" data-toggle="modal" data-target="#helpModal">info</i>
         <i class="material-icons" data-toggle="modal" data-target="#settingModal" id='setting'>settings</i>
       </div>
     </div>
@@ -48,12 +40,32 @@
     <iframe src="https://ponos.s3.amazonaws.com/information/appli/battlecats/calendar/tw/index.html"></iframe>
 
 
+    <div class="modal fade" id="helpModal" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title"></h4>
+            <ul>
+            </ul>
+          </div>
+          <div class="modal-body">
+          </div>
+          <div class="modal-footer">
+            <!-- <button id="setting-submit" class="btn btn-default" >Confirm</button> -->
+            <button id="setting-cancel" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://johnny.github.io/jquery-sortable/js/jquery-sortable.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="public/js/html2canvas.min.js"></script>
     <script src="public/js/index.js"></script>
+    <script src="public/js/overall.js"></script>
     <script src="../js/jquery.easing.1.3.js"></script>
     <script src="/socket.io/socket.io.js"></script>
   </body>

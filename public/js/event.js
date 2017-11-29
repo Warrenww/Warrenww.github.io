@@ -10,26 +10,7 @@ $(document).ready(function () {
         modify_to:"",
       };
 
-  var showMobilePanel = 1 ;
-  $(document).on('click','#m_nav_menu',function () {
-    if(showMobilePanel){
-      $(".m_nav_panel").css('right',0);
-      $("#m_nav_panel_BG").fadeIn();
-      showMobilePanel = 0 ;
-    }
-    else{
-      $(".m_nav_panel").css('right',-180);
-      $("#m_nav_panel_BG").fadeOut();
-      showMobilePanel = 1 ;
-    }
-  });
-  $(document).on('click','#m_nav_panel_BG',function () {
-    if(!showMobilePanel){
-      $(".m_nav_panel").css('right',-180);
-      $("#m_nav_panel_BG").fadeOut();
-      showMobilePanel = 1 ;
-    }
-  });
+
   $("iframe").load(function () {
     $(".debugwindow h3").text("如果沒有東西出現請按重試按鈕");
   });

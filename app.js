@@ -50,8 +50,8 @@ io.on('connection', function(socket){
       });
       gsjson({
           spreadsheetId: sheet_ID,
+           hash : 'id' ,
           worksheet: ['聯組']
-          // hash : 'id'
       })
       .then(function(result) {
         // console.log(result)
@@ -59,6 +59,23 @@ io.on('connection', function(socket){
           fs.writeFile('public/js/Combo.txt', JSON.stringify(result), (err) => {
             if (err) throw err;
             console.log('Combo is saved!');
+          });
+      })
+      .catch(function(err) {
+          console.log(err.message);
+          console.log(err.stack);
+      });
+      gsjson({
+          spreadsheetId: sheet_ID,
+           hash : 'id' ,
+          worksheet: ['敵人資料']
+      })
+      .then(function(result) {
+        // console.log(result)
+          socket.emit('push cat data',JSON.stringify(result));
+          fs.writeFile('public/js/Enemydata.txt', JSON.stringify(result), (err) => {
+            if (err) throw err;
+            console.log('Enemydata is saved!');
           });
       })
       .catch(function(err) {

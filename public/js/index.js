@@ -12,46 +12,7 @@ $(document).ready(function () {
   const image_local =  "public/css/footage/cat/u" ;
 
   // console.log(window) ;
-  if(screen.width < 768){
-    $("#lower_table .value_display").attr("colspan",7);
-  }
-  var showMobilePanel = 1 ;
-  $(document).on('click','#m_nav_menu',function () {
-    if(showMobilePanel){
-      $(".m_nav_panel").css('right',0);
-      $("#m_nav_panel_BG").fadeIn();
-      showMobilePanel = 0 ;
-    }
-    else{
-      $(".m_nav_panel").css('right',-180);
-      $("#m_nav_panel_BG").fadeOut();
-      showMobilePanel = 1 ;
-    }
-  });
-  $(document).on('click','#m_nav_panel_BG',function () {
-    if(!showMobilePanel){
-      $(".m_nav_panel").css('right',-180);
-      $("#m_nav_panel_BG").fadeOut();
-      showMobilePanel = 1 ;
-    }
-  });
-  $(document).on('click','#updateCatData',function () {io().emit('force_update_cat_data');});
-  $(document).on('keypress', 'input', function(e) {
-    let code = (e.keyCode ? e.keyCode : e.which);
-    if (code == 13) {
-      $(this).blur();
-    }
-  });
-  $(document).on('click', 'input',function (e) {
-    e.stopPropagation();
-  });
-  $(document).on('click','#start',function () {
-    var myWindow;
-    myWindow = window.open("http://battlecats-db.com/unit/status_r_all.html", "myWindow", "width=1,height=1");
-    setTimeout(function () {scroll_to_class('page_1',0);},100);
-    setTimeout(function () {myWindow.close();},30000);
-  });
-  $(document).on('click',".button",toggleButton);
+
   $(document).on('click','#next_sel_pg',function () {turnPage(1);}) ;
   $(document).on('click','#pre_sel_pg',function () {turnPage(-1);}) ;
   $(document).on('click','.card',function () {
@@ -61,18 +22,6 @@ $(document).ready(function () {
     // location.search = $(this).attr('value');
   });
   $(document).on('click',"#clear_all",function () {clearSelected('select');});
-  $(document).on('click','#upper_table th',function () {
-    // let className = $(this).siblings('td').attr('class') ;
-    // clearSelected(className) ;
-    let on = $(this).siblings().children('[value=1]') ;
-    console.log(on.length);
-    if(on.length > 0) on.each(function () {$(this).attr('value',0);});
-    else $(this).siblings().children().each(function () {
-      $(this).attr('value',1);
-    });
-
-
-  })
   $(document).on('click','#search_ability',search) ;
   $(document).on('click','.glyphicon-refresh',toggleCatStage);
   $(document).on('click','#compare',compareCat);
@@ -833,13 +782,7 @@ $(document).ready(function () {
       {scrollTop: $("."+class_name).eq(n).offset().top},
       1000,'easeInOutCubic');
   }
-  function toggleButton() {
-    let val = Number($(this).attr('value')) ;
-    $(this).attr('value',function () {
-      val = val ? 0 : 1 ;
-      return val ;
-    });
-  }
+
   function toggleCatStage() {
     let current = $(this).parent().children(".card:visible").next().attr('value');
     if(current != undefined){
@@ -956,7 +899,7 @@ $(document).ready(function () {
         }
         else if(this.responseURL.indexOf("Combo.txt") != -1){
           var data = JSON.parse(this.responseText) ;
-          // console.log(data[0][0]) ;
+          // console.log(data[0]) ;
           var obj = {} ;
           for(let i in data[0]){
             var bufferobj = {

@@ -1,6 +1,7 @@
 body,html{
+  position: relative;
   margin: 0;
-  height: 100%;
+  /*height: 100%;*/
   font-family: Microsoft JhengHei;
   -moz-user-select: none;
   -webkit-user-select: none;
@@ -11,17 +12,6 @@ body,html{
 }
 .searchCombo{
   cursor: pointer;
-}
-.start_holder{
-  display: flex;
-  /*justify-content: center;*/
-  align-items: center;
-  flex-direction: column;
-  position: fixed;
-  top: 52%;
-  width: 100%;
-  height: 32%;
-  z-index: 1 ;
 }
 .search{
   display: flex;
@@ -94,17 +84,6 @@ option{
 }
 .option{color: black;}
 .state{width: 100px;padding-left: 20px}
-/*#start,
-#setting{
-  margin: 20px;
-  width: 500px;
-  border: 5px solid black;
-  border-radius: 20px;
-  font-size: 50px;
-  padding: 0 122px ;
-  font-weight: 900;
-  -webkit-text-stroke: 2px black;
-}*/
 .head{
   background-image: url('https://lh3.googleusercontent.com/Oa9xD1RgEHQ6uugm0HRD3m1Rz5P2XPT9ENz_gLhR_Oy6-r4VaRZqB1VlZtbnptOdfT4=h900');
   background-color: rgba(0, 0, 0, 0.5);
