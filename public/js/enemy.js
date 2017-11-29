@@ -5,7 +5,7 @@ $(document).ready(function () {
   const image_url = "http://imgs-server.com/battlecats/e"
 
 
-  var color = ['紅敵','浮敵','黒敵','鋼鐵敵','天使敵','外星敵','不死敵','白敵','無屬性敵'];
+  var color = ['紅敵','浮敵','黑敵','鋼鐵敵','天使敵','外星敵','不死敵','白敵','無屬性敵'];
   for(let i in color) $(".select_color").append("<span class='button' name='["+color[i]+"]' value='0'>"+color[i]+"</span>") ;
 
   var ability = ['增攻','降攻','免疫降攻','爆擊','擊退','免疫擊退','連續攻擊',
@@ -169,7 +169,7 @@ $(document).ready(function () {
       "<th>跑速</th><td id='跑速'>"+data.速度+"</td>"+
       "<td colspan='2' rowspan='2' id='範圍'>"+data.範圍+"</td>"+
       "</tr><tr>"+
-      "<th>獲得金錢th><td id='獲得金錢'>"+data.獲得金錢+"</td>"+
+      "<th>獲得金錢</th><td id='獲得金錢'>"+data.獲得金錢+"</td>"+
       "<th>再生産</th><td id='再生産'>"+" s</td>"+
       "</tr><tr>"+
       "<td colspan='6' id='特性' "+(
