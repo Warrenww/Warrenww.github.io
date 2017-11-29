@@ -319,7 +319,7 @@ $(document).ready(function () {
 
   var xmlhttp = new XMLHttpRequest() ;
   var url = [];
-  url.push("public/js/enemydata.txt") ;
+  url.push("public/js/Catdata.txt") ;
   // url.push("public/css/footage/cat/dir.txt") ;
   url.push("public/js/Enemydata.txt") ;
   var image_list ;
@@ -331,7 +331,7 @@ $(document).ready(function () {
       if (this.readyState == 4 && this.status == 200) {
         console.log(this.responseURL);
         // console.log(this.response);
-        if(this.responseURL.indexOf("Enemydata.txt") != -1){
+        if(this.responseURL.indexOf("Catdata.txt") != -1){
           var data = JSON.parse(this.responseText) ;
           console.log(data) ;
           let nowtime =  new Date().getTime();
