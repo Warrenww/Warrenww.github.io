@@ -319,9 +319,9 @@ $(document).ready(function () {
 
   var xmlhttp = new XMLHttpRequest() ;
   var url = [];
-  url.push("public/js/Catdata.txt") ;
-  // url.push("public/css/footage/cat/dir.txt") ;
   url.push("public/js/Enemydata.txt") ;
+  // url.push("public/css/footage/cat/dir.txt") ;
+  // url.push("public/js/Enemydata.txt") ;
   var image_list ;
 
     xmlhttp.open("GET", url[0], true);

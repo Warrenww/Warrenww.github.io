@@ -48,7 +48,7 @@ $(document).ready(function () {
     // let className = $(this).siblings('td').attr('class') ;
     // clearSelected(className) ;
     let on = $(this).siblings().children('[value=1]') ;
-    console.log(on.length);
+    // console.log(on.length);
     if(on.length > 0) on.each(function () {$(this).attr('value',0);});
     else $(this).siblings().children().each(function () {
       $(this).attr('value',1);
