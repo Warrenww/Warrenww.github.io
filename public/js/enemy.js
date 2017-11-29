@@ -184,9 +184,6 @@ $(document).ready(function () {
     scroll_to_class("display",0) ;
   }
 
-
-
-
   function filterSlider() {
     $("#slider_holder").show();
     $(this).css('border-bottom','5px solid rgb(241, 166, 67)').siblings().css('border-bottom','0px solid');
