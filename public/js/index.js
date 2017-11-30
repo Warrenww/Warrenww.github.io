@@ -36,13 +36,14 @@ $(document).ready(function () {
   $(document).on('click','#setting',showSetting) ;
   $(document).on('click','#setting-submit',changeSetting) ;
 
-  var lv_input_org ;
-  $(document).on('click','.comparedata #level',function () {
-      lv_input_org = $(this).text();
-      $(this).html('<input type="text" value="' +lv_input_org+ '"></input>');
+  var input_org ;
+  $(document).on('click','.comparedata #level,.editable',function () {
+      input_org = $(this).text();
+      $(this).html('<input type="text" value="' +input_org+ '"></input>');
       $(this).find('input').select();
   });
   $(document).on('blur', '.comparedata #level input', changeCompareLevel);
+  $(document).on('blur', '.editable input', calculateLV);
   $(document).on('click','.filter_option',filterSlider);
   var filter_org ;
   $(document).on('click','.value_display,#level_num',function () {
@@ -171,15 +172,23 @@ $(document).ready(function () {
       "</td >"+
       "<tr>"+
       "<th>體力</th><td id='體力' original='"+data.lv1體力+"'>"+
-      levelToValue(data.lv1體力,data.稀有度,30).toFixed(0)+"</td>"+
+      "<span class='editable' rarity='"+data.稀有度+"'>"+
+      levelToValue(data.lv1體力,data.稀有度,30).toFixed(0)+
+      "</span></td>"+
       "<th>KB</th><td id='KB'>"+data.kb+"</td>"+
       "<th>硬度</th><td id='硬度' original='"+data.lv1硬度+"'>"+
-      levelToValue(data.lv1硬度,data.稀有度,30).toFixed(0)+"</td>"+
+      "<span class='editable' rarity='"+data.稀有度+"'>"+
+      levelToValue(data.lv1硬度,data.稀有度,30).toFixed(0)+
+      "</span></td>"+
       "</tr><tr>"+
       "<th>攻擊力</th><td id='攻擊力' original='"+data.lv1攻擊+"'>"+
-      levelToValue(data.lv1攻擊,data.稀有度,30).toFixed(0)+"</td>"+
+      "<span class='editable' rarity='"+data.稀有度+"'>"+
+      levelToValue(data.lv1攻擊,data.稀有度,30).toFixed(0)+
+      "</span></td>"+
       "<th>DPS</th><td id='DPS' original='"+data.lv1dps+"'>"+
-      levelToValue(data.lv1dps,data.稀有度,30).toFixed(0)+"</td>"+
+      "<span class='editable' rarity='"+data.稀有度+"'>"+
+      levelToValue(data.lv1dps,data.稀有度,30).toFixed(0)+
+      "</span></td>"+
       "<th>射程</th><td id='射程'>"+data.射程+"</td>"+
       "</tr><tr>"+
       "<th>攻頻</th><td id='攻頻'>"+data.攻頻.toFixed(1)+" s</td>"+
@@ -288,8 +297,9 @@ $(document).ready(function () {
       for(let i in change){
         let target = $('.dataTable').find('#'+change[i]) ;
         let original = target.attr('original');
-        target.html(levelToValue(original,rarity,level).toFixed(0))
-              .css('background-color',' rgba(242, 213, 167, 0.93)');
+        target.html("<span class='editable' rarity='"+data.稀有度+"'>"+
+                levelToValue(original,rarity,level).toFixed(0)+
+                "</span>").css('background-color',' rgba(242, 213, 167, 0.93)');
         setTimeout(function () {
           target.css('background-color','rgba(255, 255, 255, .9)');
         },500);
@@ -621,7 +631,7 @@ $(document).ready(function () {
         highlightTheBest();
         $('.comparedatahead').find('th').css('border-left','0px solid');
       }
-      else $(this).parent().html(lv_input_org);
+      else $(this).parent().html(input_org);
   }
   function filterSlider() {
     $("#slider_holder").show();
@@ -800,7 +810,7 @@ $(document).ready(function () {
       100,'easeInOutCubic');
   }
   function levelToValue(origin,rarity,lv) {
-    let limit,result ;
+    let limit ;
     switch (rarity) {
       case '稀有':
       limit = 70 ;
@@ -862,6 +872,41 @@ $(document).ready(function () {
         break;
       }
     }
+  }
+  function calculateLV() {
+    let val = Number($(this).val()),
+        rarity = $(this).parent().attr('rarity'),
+        ori = Number($(this).parents('td').attr('original')),
+        lv;
+    if(!val){
+      $(this).parent().html(input_org);
+      return
+    }
+    let limit ;
+    switch (rarity) {
+      case '稀有':
+      limit = 70 ;
+      break;
+      case '激稀有狂亂':
+      limit = 20 ;
+      break;
+      default:
+      limit = 60 ;
+    }
+    console.log(val+","+rarity+","+ori+","+limit);
+    lv = val/ori*10-8 ;
+    lv = lv/2 > limit ? lv-limit : lv/2 ;
+    lv = Math.ceil(lv) ;
+    console.log(lv);
+    if(lv > 100 || lv < 1){
+      alert("超出範圍!!!");
+      $(this).parent().html(input_org);
+    }
+    else{
+      $('#level').slider('option','value',lv);
+      $(this).parent().html(levelToValue(ori,rarity,lv));
+    }
+
   }
 
   var xmlhttp = new XMLHttpRequest() ;

@@ -120,6 +120,7 @@ td, th {
   width: 10%;
 }
 .dataTable th{width: 150px}
+.dataTable input{width: 75px}
 #lv_minus,#lv_plus{
   align-items: center;
   border-radius: 50% ;
@@ -300,3 +301,7 @@ table {
 .glyphicon-minus,
 .glyphicon-plus,
 #display_id{cursor: pointer;}
+#helpModal .modal-header{
+  height: 40% ;
+  overflow-y: scroll;
+}

@@ -170,7 +170,7 @@ $(document).ready(function () {
       "<td colspan='2' rowspan='2' id='範圍'>"+data.範圍+"</td>"+
       "</tr><tr>"+
       "<th>獲得金錢</th><td id='獲得金錢'>"+data.獲得金錢+"</td>"+
-      "<th>再生産</th><td id='再生産'>"+" s</td>"+
+      "<th>屬性</th><td id='屬性'>"+addColor(data.分類)+"</td>"+
       "</tr><tr>"+
       "<td colspan='6' id='特性' "+(
       data.特性.indexOf("連續攻撃") != -1 ?
@@ -182,6 +182,12 @@ $(document).ready(function () {
     );
     initialSlider(data);
     scroll_to_class("display",0) ;
+  }
+  function addColor(str) {
+    let a = str.split('['),
+        b = [] ;
+    for(let i in a) b.push(a[i].split(']')[0]) ;
+    return b.join(" ")
   }
 
   function filterSlider() {
