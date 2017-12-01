@@ -58,7 +58,7 @@ $(document).ready(function () {
     $('#level').slider('option','value',val);
   });
   $(document).on('click','.searchCombo',function () {
-    let r = confirm("要轉移調聯組查詢畫面嗎?");
+    let r = confirm("要轉移到聯組查詢畫面嗎?");
     if (!r) return
     let goto = $(this).attr('val');
     location.href = "combo.html?q="+goto;

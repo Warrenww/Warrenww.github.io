@@ -22,6 +22,9 @@ io.on('connection', function(socket){
     console.log('Someone force me to load cat data ...QAQ') ;
     loadcatData() ;
   });
+  socket.on('connet', (data,callback) => {
+    console.log('connnnnnnet');
+  });
 
   socket.on('disconnect', function(){
     console.log('user disconnected');
