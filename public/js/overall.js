@@ -5,7 +5,10 @@ $(document).ready(function () {
   if(screen.width < 768){
     $("#lower_table .value_display").attr("colspan",7);
   }
-  io().emit('connet') ;
+  console.log(location.href) ;
+  const beta = location.href.indexOf('localhost') != -1 ||  location.href.indexOf('herokuapp.com') != -1 ? true : false ;
+  console.log(beta) ;
+  if(beta) BetaFunction() ;
   $(document).on('click','#updateCatData',function () {io().emit('force_update_cat_data');});
   $(document).on('keypress', 'input', function(e) {
     let code = (e.keyCode ? e.keyCode : e.which);
@@ -91,6 +94,10 @@ $(document).ready(function () {
       );
 
     }
+  }
+
+  function BetaFunction() {
+    io().emit('connet') ;
   }
 
 });
