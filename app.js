@@ -93,7 +93,7 @@ io.on('connection', function(socket){
 
 const port = 8000 ;
 http.listen(process.env.PORT || port, function(){
-  console.log('listening on :'+port);
+  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 });
 
 app.get('/', function(req, res){
