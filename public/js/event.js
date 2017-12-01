@@ -30,13 +30,17 @@ $(document).ready(function () {
     if( mm < 1){mm = 12 ; yy -- ;}
     var load = confirm("貓咪:確定要載入"+mm+"月"+dd+"日的活動嗎?");
     if(load){
-      site = url+yy+mm+dd+".html";
+      site = url+yy+addZero(mm)+addZero(dd)+".html";
       console.log(site);
       $("iframe").attr("src",site);
     }
     else{
       $(".debugwindow h3").text("如果沒有東西出現請按重試按鈕");
       dd += 1 ;
+    }
+    function addZero(n) {
+      n = Number(n) ;
+      return n < 10 ? "0"+n : n ;
     }
 
   });
