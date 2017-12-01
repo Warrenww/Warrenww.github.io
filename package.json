@@ -9,5 +9,8 @@
   },
   "devDependencies": {
     "npm-start-command": "^0.2.0"
+  },
+  "scripts": {
+    "start": "node app.js"
   }
 }
