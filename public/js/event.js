@@ -4,7 +4,7 @@ $(document).ready(function () {
   let dd = today.getDate(),
       mm = today.getMonth()+1,
       yy = today.getFullYear() ;
-  let site = url+yy+mm+dd+".html";
+  let site = url+yy+addZero(mm)+addZero(dd)+".html";
   var eventUpdate = {
         modify_date: dd,
         modify_to:"",
