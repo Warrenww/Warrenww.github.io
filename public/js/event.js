@@ -38,11 +38,11 @@ $(document).ready(function () {
       $(".debugwindow h3").text("如果沒有東西出現請按重試按鈕");
       dd += 1 ;
     }
-    function addZero(n) {
-      n = Number(n) ;
-      return n < 10 ? "0"+n : n ;
-    }
 
   });
+  function addZero(n) {
+    n = Number(n) ;
+    return n < 10 ? "0"+n : n ;
+  }
 
 });
