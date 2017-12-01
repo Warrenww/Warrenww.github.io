@@ -6,7 +6,11 @@ $(document).ready(function () {
     $("#lower_table .value_display").attr("colspan",7);
   }
   console.log(location.href) ;
+<<<<<<< HEAD
   const beta = location.href.indexOf('github.io') != -1 ? false : true ;
+=======
+  const beta = location.href.indexOf('localhost') != -1 ||  location.href.indexOf('herokuapp.com') != -1 ? true : false ;
+>>>>>>> 2209e2e559db8fa3c7130b8b08117ff7d5c020f4
   console.log(beta) ;
   if(beta) BetaFunction() ;
   $(document).on('click','#updateCatData',function () {io().emit('force_update_cat_data');});
