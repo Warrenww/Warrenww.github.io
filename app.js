@@ -92,7 +92,7 @@ io.on('connection', function(socket){
 
 
 const port = 8000 ;
-http.listen(port, function(){
+http.listen(process.env.PORT || port, function(){
   console.log('listening on :'+port);
 });
 
