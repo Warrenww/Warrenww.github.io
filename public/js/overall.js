@@ -65,23 +65,17 @@ $(document).ready(function () {
   $("nav .navLinkBox").html(nav_html) ;
   $(".m_navLinkBox").html(nav_html) ;
 
-  $("#helpModal").find(".update_dialog").html(
-        "<h4>Ver 1.0 更新</h4>"+
-        "<ul>"+
-        "<li>最新消息移至導航列</li>"+
-        "<li>新增敵人資料(未翻譯)</li>"+
-        "<li>聯組資料錯字修正</li>"+
-        "<li>新增幫助視窗(本窗口)</li>"+
-        "</ul>"+
-        "<h4>Ver 1.1 更新</h4>"+
-        "<ul>"+
-        "<li>貓咪查詢頁面中，可以直接在「體力、攻擊、硬度、DPS」"+
-        "顯示欄位中輸入數值查詢對應等級</li>"+
-        "<li>新增部分敵人資料名稱翻譯</li>"+
-        "<li>聯組資料錯字修正</li>"+
-        "<li>部分UI介面優化</li>"+
-        "</ul>"
-      ).parent().siblings(".modal-body").html(
+  var xmlhttp = new XMLHttpRequest() ;
+  var url = "public/update_dialog.txt";
+  var update_dialog ;
+
+  xmlhttp.open("GET", url, true);
+  xmlhttp.send();
+  xmlhttp.onreadystatechange = function(){
+    if (this.readyState == 4 && this.status == 200){
+      update_dialog = this.responseText ;
+      $("#helpModal").find(".update_dialog").html(update_dialog)
+      .parent().siblings(".modal-body").html(
         "<h4>常見問題</h4>"+
         "<b>圖片無法顯示</b></br>"+
         "<p>因部分圖片是由超絕攻略網抓取，受限於domain問題，"+
@@ -94,5 +88,7 @@ $(document).ready(function () {
         "煩請手動點按頁面下方retry調整至最近的發布日期</p>"
       );
 
+    }
+  }
 
 });

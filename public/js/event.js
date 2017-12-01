@@ -9,6 +9,7 @@ $(document).ready(function () {
         modify_date: dd,
         modify_to:"",
       };
+  let d_31 = [1,3,5,7,8,10,12] ;
 
 
   $("iframe").load(function () {
@@ -21,7 +22,12 @@ $(document).ready(function () {
   });
   $(document).on('click','#retry',function () {
     $(".debugwindow h3").text("重新抓取資料中...");
-    dd -= 1;
+    dd -- ;
+    if( dd < 1){
+      dd = mm-1 != 2 ? (d_31.indexOf(mm-1) != -1 ? 31 :30) : 29 ;
+      mm -- ;
+    }
+    if( mm < 1){mm = 12 ; yy -- ;}
     var load = confirm("貓咪:確定要載入"+mm+"月"+dd+"日的活動嗎?");
     if(load){
       site = url+yy+mm+dd+".html";

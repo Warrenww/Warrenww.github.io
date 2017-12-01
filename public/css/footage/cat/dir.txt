@@ -38,6 +38,8 @@ u045-3.png
 u060-1.png
 u060-2.png
 u060-3.png
+u073-1.png
+u074-1.png
 u077-1.png
 u077-2.png
 u077-3.png
@@ -91,6 +93,7 @@ u172-3.png
 u195-1.png
 u195-2.png
 u195-3.png
+u197-1.png
 u213-1.png
 u213-2.png
 u258-1.png
@@ -103,6 +106,7 @@ u272-1.png
 u272-2.png
 u273-1.png
 u273-2.png
+u303-1.png
 u317-1.png
 u317-2.png
 u323-1.png

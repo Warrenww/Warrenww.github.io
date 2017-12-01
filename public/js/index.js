@@ -898,9 +898,14 @@ $(document).ready(function () {
     lv = lv/2 > limit ? lv-limit : lv/2 ;
     lv = Math.ceil(lv) ;
     console.log(lv);
-    if(lv > 100 || lv < 1){
+    if(lv > 100){
       alert("超出範圍!!!");
-      $(this).parent().html(input_org);
+      $('#level').slider('option','value',100);
+      $(this).parent().html(levelToValue(ori,rarity,100));
+    } else if(lv <1){
+      alert("超出範圍!!!");
+      $('#level').slider('option','value',1);
+      $(this).parent().html(levelToValue(ori,rarity,1));
     }
     else{
       $('#level').slider('option','value',lv);
