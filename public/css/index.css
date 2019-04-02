@@ -1,1 +1,73 @@
-
+body{
+  --nav_Width : 36px;
+}
+nav{
+  background-color: var(--gray);
+  padding : 7px;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left:0;
+  width: var(--nav_Width);
+}
+.icon img{
+  border-radius: 50%;
+  overflow: hidden;
+}
+nav .icon{
+  width: var(--nav_Width);
+  height: var(--nav_Width);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: .3s ease;
+  display: block;
+  position: relative;
+}
+nav .icon:hover{ background-color: gray; }
+nav .icon::after{
+  content: attr(text);
+  position: absolute;
+  top: 0;
+  left: calc(100% + 10px);
+  background-color: black;
+  color: white;
+  font-family: 'Noto Sans TC', sans-serif;
+  text-align: center;
+  padding: 5px 10px;
+  border-radius: 7px;
+  box-shadow: 0px 0px 10px black;
+  width: 75;
+  display: none;
+}
+nav .icon:hover::after{display: block}
+nav .section{
+  border-bottom: 1px solid #0d0d0d;
+  padding: 10 0;
+}
+nav i.Material-icons{
+  font-size: calc(var(--nav_Width) - 8px);
+  padding: 4;
+  color: white;
+}
+.main{
+  width: calc(100% - var(--nav_Width) - 14px);
+  margin-left: calc(var(--nav_Width) + 14px);
+  display: flex;
+  flex-direction: column;
+}
+.main h1{
+  text-align: center;
+  color: white;
+  margin-top: 20px;
+}
+.main .content{
+  flex-direction: row;
+}
+.content>div{
+  flex:1;
+  margin: 5 10;
+  padding: 5;
+  border-radius: 10px;
+  border: 3px dashed white;
+}
