@@ -1,5 +1,7 @@
 body{
   --nav_Width : 36px;
+  background-color: var(--blue_green);
+  background: linear-gradient(var(--blue_green_light),var(--blue_green));
 }
 nav{
   background-color: var(--gray);
@@ -63,6 +65,7 @@ nav i.Material-icons{
 }
 .main .content{
   flex-direction: row;
+  align-items: baseline;
 }
 .content>div{
   flex:1;

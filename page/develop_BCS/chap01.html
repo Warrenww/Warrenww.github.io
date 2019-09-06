@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="tw" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>第一章 凡事起頭難</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC|Noto+Serif+TC|Quicksand" rel="stylesheet">
+    <link rel="stylesheet" href="../../public/css/overall.css" />
+  </head>
+  <body>
+    <h1 class="title" style="color:white;background-position:-40px -200px;background-color: rgba(0,0,0,0.7);background-blend-mode: multiply;background-image:url('https://miro.medium.com/max/1200/1*y6C4nSvy2Woe0m7bWEn4BA.png')">
+      第一章<br>凡事起頭難
+    </h1>
+    <article>
+      <h2>前言</h2>
+      <p>
+        工欲善其事，必先利其器，第一章我們輕鬆一點，先把基礎建設做好，架出一個node js的server，還有基本的首頁，
+        並確立兩者間可以用socket io這個模組來溝通。如果你完全沒有聽過node、npm、react甚至連網頁都沒寫過也沒關係，
+        我會盡量把我當年(?)的學習歷程與過程中可能會有的問題寫下來。
+      </p>
+      <h2>本章目標</h2>
+      <ul>
+        <li> <a href="#01">安裝node js(?)</a> </li>
+        <li> <a href="#02">安裝好需要的node模組</a> </li>
+        <li> <a href="#03">架設node js server可以存取網頁</a> </li>
+        <li> <a href="#04">做出首頁</a> </li>
+        <li> <a href="05">用socket io連接前後端</a> </li>
+      </ul>
+      <h2 id="01">安裝node js</h2>
+      <p>
+        前往node js的<a href="https://nodejs.org" target="_blank">官網</a>即可下載node js，按照指示安裝完成之後，就可以開始使用node js了。
+        首先打開<span class="ps-triger" data-target="terminal">終端機</span>輸入:
+        <span class="ps" id="terminal">
+          <b>快速打開終端機的方法</b> <br>
+          按下windows+R開啟執行視窗，輸入cmd，即可叫出終端機(此時路徑在 <code>C:/Users/{username}</code>之下 )
+        </span>
+      </p>
+      <pre>
+        <code>
+          node -v
+        </code>
+      </pre>
+      <p>
+        指令來檢查node js是否有安裝好，如果順利安裝好的話，就會顯示目前安裝的node版本，筆者目前用的是v10.14.2版，
+      </p>
+    </article>
+    <script src="../../public/js/overall.js" charset="utf-8"></script>
+  </body>
+</html>
