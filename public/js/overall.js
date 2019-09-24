@@ -32,16 +32,29 @@ if(nav_but = document.getElementById("nav_but")){
   });
 }
 
-var ps ;
+var ps, timeout={} ;
 if(ps = document.getElementsByClassName('ps-triger')){
   for(let i=0; i<ps.length; i++){
-    var target = ps[i].getAttribute('data-target'),
-        pos = ElementPosition(ps[i],8);
+    var target = ps[i].getAttribute('data-target');
+    timeout[target] = "";
     ps[i].onmouseenter = function(){
+      var  pos = ElementPosition(this,8);
     	document.getElementById(target).style.cssText = `top:${pos[1]}px;left:${pos[0]}px;display:block;opacity:1`;
+      clearTimeout(timeout[target]);
+      document.getElementById(target).onmouseenter = function () {
+        clearTimeout(timeout[target]);
+      }
+      document.getElementById(target).onmouseleave = function () {
+        timeout[target] = setTimeout(function () {
+          document.getElementById(target).style.cssText = `display:none;opacity:0`;
+        }, 100);
+      }
     }
     ps[i].onmouseleave = function () {
-      // document.getElementById(target).style.cssText = "";
+      timeout[target] = setTimeout(function () {
+        document.getElementById(target).style.cssText = `display:none;opacity:0`;
+      }, 100);
+
     }
   }
 }

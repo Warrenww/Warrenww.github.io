@@ -1,9 +1,13 @@
 body,html{
   --Black_trans : rgba(0,0,0,.7);
   --Black_solid : #000000;
-  --gray : #252525;
+  --gray : #363636;
+  --lightgray : #797979;
   --blue_green : #037070;
   --blue_green_light : #26a889;
+  --red : #ec5d5d;
+  --green : #74cc6c;
+  --blue : #61b4d7;
   margin: 0;
   font-family: 'Noto Sans TC', sans-serif;
   /* font-family: 'Noto Serif TC', serif; */

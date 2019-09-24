@@ -22,8 +22,8 @@
       </p>
       <h2>本章目標</h2>
       <ul>
-        <li> <a href="#01">安裝node js(?)</a> </li>
-        <li> <a href="#02">安裝好需要的node模組</a> </li>
+        <li> <a href="#01">安裝node js</a> </li>
+        <li> <a href="#02">安裝node模組</a> </li>
         <li> <a href="#03">架設node js server可以存取網頁</a> </li>
         <li> <a href="#04">做出首頁</a> </li>
         <li> <a href="05">用socket io連接前後端</a> </li>
@@ -43,8 +43,72 @@
         </code>
       </pre>
       <p>
-        指令來檢查node js是否有安裝好，如果順利安裝好的話，就會顯示目前安裝的node版本，筆者目前用的是v10.14.2版，
+        指令來檢查node js是否有安裝好，如果順利安裝好的話，就會顯示目前安裝的node版本，筆者目前用的是v10.14.2版，node js在本專案中主要擔任後端代理資料庫的腳色，
+        之後我們會連接firebase作為資料庫，但因為免費版本有存取次數的限制，所以必須先把資料cache到後端主機的記憶體中，才可以無限制地讓使用者存取資料。
+        除了快取的功能外，後端也作為一些資料的預處理節點，將結果先行簡化，以減少前端的運算負擔與流量負擔。
       </p>
+      <h2 id="02">安裝node模組</h2>
+      <p>
+        node js因為使用率非常的高，所以生態的發展也相對的成熟，套件模組的種類數量都非常多樣，而其模組管理系統，node package manager(NPM)，
+        會隨者node js一併安裝，同上一段的方法，在終端機輸入已下指令即可檢查npm是否有正確的安裝，並查看版本號:
+      </p>
+      <pre>
+        <code>
+          npm -v
+        </code>
+      </pre>
+      <p>
+        筆者目前使用的版本是6.4.1版。確認好npm有正確安裝後，就可以用npm來下載安裝模組了。
+        首先要安裝的是最重要的React。React是由fb開發的開源javascript框架，有別於傳統的Html + Css + JS的網頁結構，
+        React主打完全使用javascript來渲染網頁，並採取重複利用component的思維，來減少重複造輪，另外也用了OOP
+        (Object-oriented programming)的觀念加強維護性。
+      </p>
+
+      <pre>
+        <code>
+          npx create-react-app test
+
+          Creating a new React app in C:\Users\warre\OneDrive - g.ntu.edu.tw\Work\test.
+          Installing packages. This might take a couple of minutes.
+          Installing react, react-dom, and react-scripts...
+
+          > core-js@2.6.9 postinstall C:\Users\warre\OneDrive - g.ntu.edu.tw\Work\test\node_modules\babel-runtime\node_modules\core-js
+          > node scripts/postinstall || echo "ignore"
+
+          > core-js@3.1.4 postinstall C:\Users\warre\OneDrive - g.ntu.edu.tw\Work\test\node_modules\core-js
+          > node scripts/postinstall || echo "ignore"
+
+          + react@16.9.0
+          + react-scripts@3.1.1
+          + react-dom@16.9.0
+          added 1439 packages from 685 contributors and audited 905233 packages in 165.136s
+          found 0 vulnerabilities
+
+          Initialized a git repository.
+
+          Success! Created test at C:\Users\warre\OneDrive - g.ntu.edu.tw\Work\test
+          Inside that directory, you can run several commands:
+
+            npm start
+              Starts the development server.
+
+            npm run build
+              Bundles the app into static files for production.
+
+            npm test
+              Starts the test runner.
+
+            npm run eject
+              Removes this tool and copies build dependencies, configuration files
+              and scripts into the app directory. If you do this, you can’t go back!
+
+          We suggest that you begin by typing:
+            cd test
+            npm start
+
+          Happy hacking!
+        </code>
+      </pre>
     </article>
     <script src="../../public/js/overall.js" charset="utf-8"></script>
   </body>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="tw" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>第二章 第一次做網頁就上手</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC|Noto+Serif+TC|Quicksand" rel="stylesheet">
+    <link rel="stylesheet" href="../../public/css/overall.css" />
+  </head>
+  <body>
+    <h1 class="title" style="color:white;background-position:-40px -200px;background-color: rgba(0,0,0,0.7);background-blend-mode: multiply;background-image:url('https://miro.medium.com/max/1200/1*y6C4nSvy2Woe0m7bWEn4BA.png')">
+      第二章<br>第一次做網頁就上手
+    </h1>
+    <article>
+      <p>
+        傳統的網頁結構如下圖所示。
+        基本是由html(骨架)+css(皮膚)+js(神經)組成的。html就像是一個網頁的骨架，定義了網頁上有那些元件，
+        以及每個元件的順序與父子關係如何。html是一種標記語言(markup language)，每一種元件會用標籤(tag)包起來，
+        而標籤中也可以定義一些屬性，結構如下:
+      </p>
+      <pre>
+        &lt;Parent attribute="foo"&gt;
+          &lt;Child&gt;
+            Content
+          &lt;/Child&gt;
+        &lt;/Parent&gt;
+      </pre>
+      <svg width="650px" height="500px" style="font-family: monospace;">
+        <rect x="50" y="20" rx="20" ry="20" width="150px" height="250"
+          style="fill:var(--red);stroke:var(--gray);stroke-width:3;" />
+        <rect x="250" y="20" rx="20" ry="20" width="150px" height="250"
+          style="fill:var(--green);stroke:var(--gray);stroke-width:3;" />
+        <rect x="450" y="20" rx="20" ry="20" width="150px" height="250"
+          style="fill:var(--blue);stroke:var(--gray);stroke-width:3;" />
+        <text x="115" y="300">style.css</text>
+        <text x="60" y="50">a {
+          <tspan x="70" y="70">color: white;</tspan>
+          <tspan x="60" y="90">}</tspan>
+        </text>
+        <rect x="60" y="110" width="130px" height="15px" style="fill:white;opacity:.7"/>
+        <rect x="60" y="130" width="100px" height="15px" style="fill:white;opacity:.7"/>
+        <rect x="60" y="150" width="120px" height="15px" style="fill:white;opacity:.7"/>
+        <rect x="60" y="170" width="110px" height="15px" style="fill:white;opacity:.7"/>
+        <rect x="60" y="190" width="90px" height="15px" style="fill:white;opacity:.7"/>
+        <text x="310" y="300">index.html</text>
+        <text x="260" y="50"> &lt;a href="#2"&gt;
+          <tspan x="270" y="70">go to id 2</tspan>
+          <tspan x="260" y="90">&lt;/a&gt;</tspan>
+        </text>
+        <rect x="260" y="110" width="130px" height="15px" style="fill:white;opacity:.7"/>
+        <rect x="260" y="130" width="100px" height="15px" style="fill:white;opacity:.7"/>
+        <rect x="260" y="150" width="120px" height="15px" style="fill:white;opacity:.7"/>
+        <rect x="260" y="170" width="110px" height="15px" style="fill:white;opacity:.7"/>
+        <rect x="260" y="190" width="90px" height="15px" style="fill:white;opacity:.7"/>
+        <text x="490" y="300">javascript.js</text>
+        <text x="460" y="50"> function foo(){
+          <tspan x="470" y="70">return true;</tspan>
+          <tspan x="460" y="90">}</tspan>
+        </text>
+        <rect x="460" y="110" width="130px" height="15px" style="fill:white;opacity:.7"/>
+        <rect x="460" y="130" width="100px" height="15px" style="fill:white;opacity:.7"/>
+        <rect x="460" y="150" width="120px" height="15px" style="fill:white;opacity:.7"/>
+        <rect x="460" y="170" width="110px" height="15px" style="fill:white;opacity:.7"/>
+        <rect x="460" y="190" width="90px" height="15px" style="fill:white;opacity:.7"/>
+        <polygon points="205,120 220,120 220,105 245,135 220,165 220,150 205,150" style="fill:var(--lightgray)"/>
+        <polygon points="445,120 430,120 430,105 405,135 430,165 430,150 445,150" style="fill:var(--lightgray)"/>
+      </svg>
+    </article>
+
+    <script src="../../public/js/overall.js" charset="utf-8"></script>
+
+  </body>
+</html>
